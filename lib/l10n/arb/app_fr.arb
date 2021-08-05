@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "homePageTitle": "Accueil",
+    "homePageTitle": "Epicture",
     "@homePageTitle": {
         "description": "Titre de la page HomePage"
     },
