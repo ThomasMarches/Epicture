@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../../../l10n/l10n.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({
+class SearchBody extends StatelessWidget {
+  const SearchBody({
     Key? key,
   }) : super(key: key);
 
-  static const routeName = '/loginpage';
+  static const routeName = '/searchpage';
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return Container();
+    return const Text('Search Body');
   }
 }
