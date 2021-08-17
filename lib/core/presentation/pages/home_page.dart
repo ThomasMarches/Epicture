@@ -46,32 +46,33 @@ class EpictureBottomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       elevation: 30,
-      unselectedItemColor: Colors.black,
+      selectedItemColor: Colors.black,
       showSelectedLabels: false,
       type: BottomNavigationBarType.fixed,
       unselectedIconTheme: const IconThemeData(size: 30),
       selectedIconTheme: const IconThemeData(size: 40),
       iconSize: 35,
-      items: <BottomNavigationBarItem>[
+      items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          activeIcon: ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return const RadialGradient(
-                center: Alignment.topLeft,
-                radius: 0.5,
-                colors: Constants.epictureTextGradient,
-                tileMode: TileMode.mirror,
-              ).createShader(bounds);
-            },
-            child: const Icon(Icons.home),
-          ),
-          icon: const Icon(Icons.home, color: Colors.grey),
+          activeIcon: Icon(Icons.home),
+          icon: Icon(Icons.home_outlined, color: Colors.grey),
           label: '',
         ),
-        const BottomNavigationBarItem(icon: Icon(Icons.add_a_photo), label: ''),
-        const BottomNavigationBarItem(icon: Icon(Icons.favorite), label: ''),
-        const BottomNavigationBarItem(
-            icon: Icon(Icons.contact_page), label: ''),
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.add_a_photo),
+          icon: Icon(Icons.add_a_photo_outlined),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.favorite),
+          icon: Icon(Icons.favorite_outline),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          activeIcon: Icon(Icons.contact_page),
+          icon: Icon(Icons.contact_page_outlined),
+          label: '',
+        ),
       ],
     );
   }
