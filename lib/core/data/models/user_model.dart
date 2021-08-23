@@ -1,23 +1,27 @@
 import 'dart:convert';
 
 class UserModel {
-  UserModel(
-    this.userName,
-    this.clientId,
-    this.biography,
-    this.avatarName,
-    this.avatarPath,
-    this.refreshToken,
-  );
+  UserModel({
+    required this.accessToken,
+    required this.refreshToken,
+    required this.accountId,
+    required this.accountUsername,
+    this.clientId = '',
+    this.biography = '',
+    this.avatarName = '',
+    this.avatarPath = '',
+  });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      map['userName'],
-      map['clientId'],
-      map['biography'],
-      map['avatarName'],
-      map['avatarPath'],
-      map['refreshToken'],
+      clientId: map['clientId'],
+      biography: map['biography'],
+      avatarName: map['avatarName'],
+      avatarPath: map['avatarPath'],
+      accessToken: map['accessToken'],
+      accountUsername: map['accountUsername'],
+      accountId: map['accountId'],
+      refreshToken: map['refreshToken'],
     );
   }
 
@@ -26,21 +30,26 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'userName': userName,
       'clientId': clientId,
       'biography': biography,
       'avatarName': avatarName,
       'avatarPath': avatarPath,
       'refreshToken': refreshToken,
+      'accessToken': accessToken,
+      'accountId': accountId,
+      'accountUsername': accountUsername
     };
   }
 
   String toJson() => json.encode(toMap());
 
-  final String userName;
-  final String clientId;
-  final String biography;
-  final String avatarName;
-  final String avatarPath;
+  late String clientId;
+  late String biography;
+  late String avatarName;
+  late String avatarPath;
+
+  final String accessToken;
   final String refreshToken;
+  final String accountUsername;
+  final String accountId;
 }

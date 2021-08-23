@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:epicture/core/presentation/pages/login_page.dart';
 
 import '../../../l10n/l10n.dart';
 import '../router/app_router.dart';
