@@ -1,4 +1,4 @@
-name: very_good_starter
+name: epicture
 description: A new Flutter project.
 version: 1.0.0+1
 publish_to: none
@@ -14,14 +14,17 @@ dependencies:
   bloc: ^7.0.0
   dartz: ^0.10.0-nullsafety.2
   equatable: ^2.0.3
-  flutter_bloc: ^7.0.0
+  flutter_bloc: ^7.1.0
   intl: ^0.17.0
   logger: ^1.0.0
+  flutter_webview_plugin: ^0.4.0
+  shared_preferences: ^2.0.6
+  dio: ^4.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  bloc_test: ^8.0.0
+  bloc_test: ^8.1.0
   mocktail: ^0.1.0
   very_good_analysis: ^2.1.0
 

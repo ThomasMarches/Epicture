@@ -1,13 +1,29 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:epicture/core/utils/constants.dart';
 
 import '../../../l10n/l10n.dart';
 
-class ProfileBody extends StatelessWidget {
+class ProfileBody extends StatefulWidget {
   const ProfileBody({
     Key? key,
   }) : super(key: key);
 
   static const routeName = '/searchpage';
+
+  @override
+  _ProfileBodyState createState() => _ProfileBodyState();
+}
+
+class _ProfileBodyState extends State<ProfileBody> {
+  // _ProfileBodyState() {
+  //   _getUsernameFromApi().then((String value) => setState(() {
+  //         userName = value;
+  //       }));
+  // }
+
+  String? userName;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +55,9 @@ class ProfileBody extends StatelessWidget {
                       const Spacer(),
                       Column(
                         children: [
-                          const Text(
-                            'Jad31',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          Text(
+                            (userName == null) ? 'Username' : userName!,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           Row(
@@ -136,5 +152,22 @@ class ProfileBody extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<String> _getUsernameFromApi() async {
+    final preferences = await SharedPreferences.getInstance();
+
+    try {
+      var dio = Dio();
+      dio.options.headers['Authorization'] = 'Client-ID ${Constants.clientId}';
+
+      var response = await dio.get(
+          '${Constants.getUserInformationsURL}${preferences.getString('account_username')}');
+      print(response.data['url']);
+      return response.data['url'] == null ? '' : response.data['url']!;
+    } catch (e) {
+      print(e);
+    }
+    return '';
   }
 }

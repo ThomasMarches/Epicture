@@ -1,4 +1,4 @@
-package com.example.veryGoodStarter
+package com.example.Epicture
 
 import io.flutter.embedding.android.FlutterActivity
 

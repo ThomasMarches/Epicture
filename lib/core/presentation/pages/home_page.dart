@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:very_good_starter/core/utils/constants.dart';
+import 'package:epicture/core/utils/constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
