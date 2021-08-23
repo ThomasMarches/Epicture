@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../l10n/l10n.dart';
-
 class FavoriteBody extends StatelessWidget {
   const FavoriteBody({
     Key? key,
@@ -11,8 +9,6 @@ class FavoriteBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     return GridView.count(
       primary: false,
       padding: const EdgeInsets.all(10),
@@ -28,7 +24,8 @@ class FavoriteBody extends StatelessWidget {
       Card(
         elevation: 0,
         margin: const EdgeInsets.all(0),
-        child: Container(
+        // ! changed to SizedBox for code formatting but needs be checked
+        child: SizedBox(
           width: MediaQuery.of(context).size.width / 3,
           child: Column(
             children: [

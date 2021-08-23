@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../l10n/l10n.dart';
-
 class UploadBody extends StatelessWidget {
   const UploadBody({
     Key? key,
@@ -11,8 +9,6 @@ class UploadBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     return const Text('Upload Body');
   }
 }

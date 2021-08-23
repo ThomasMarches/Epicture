@@ -9,11 +9,13 @@ class FetchUserInformationsUseCase extends UseCase<UserEntity, NoParams> {
   Future<Either<Failure, UserEntity>> call(NoParams params) async {
     final userInformations = await WebViewDataSource.fetchUserInformations();
 
-    return (userInformations != null) ? Right(UserEntity(
-      accessToken: userInformations.accessToken,
-      accountId: userInformations.accountId,
-      accountUsername: userInformations.accountUsername,
-      refreshToken: userInformations.refreshToken,
-      )) : const Left(ServerFailure());
+    return (userInformations != null)
+        ? Right(UserEntity(
+            accessToken: userInformations.accessToken,
+            accountId: userInformations.accountId,
+            accountUsername: userInformations.accountUsername,
+            refreshToken: userInformations.refreshToken,
+          ))
+        : const Left(ServerFailure());
   }
 }

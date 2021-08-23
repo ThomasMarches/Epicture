@@ -15,7 +15,7 @@ void main() {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
 
- runZonedGuarded(
+  runZonedGuarded(
     () => runApp(BlocProvider(
       create: (context) => UserBloc(),
       child: const App(),

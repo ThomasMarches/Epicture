@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:epicture/core/presentation/pages/favorite_body.dart';
+// import 'package:epicture/core/presentation/pages/favorite_body.dart';
 import 'package:epicture/core/presentation/pages/login_page.dart';
-import 'package:epicture/core/presentation/pages/search_body.dart';
-import 'package:epicture/core/presentation/pages/upload_body.dart';
+// import 'package:epicture/core/presentation/pages/search_body.dart';
+// import 'package:epicture/core/presentation/pages/upload_body.dart';
 
-import '../pages/home_page.dart';
+// import '../pages/home_page.dart';
 
 class AppRouter {
   Route? onGenerateRoute(RouteSettings routeSettings) {

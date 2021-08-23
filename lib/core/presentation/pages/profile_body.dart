@@ -1,9 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:epicture/core/utils/constants.dart';
-
-import '../../../l10n/l10n.dart';
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody({
@@ -27,8 +22,6 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -87,16 +80,21 @@ class _ProfileBodyState extends State<ProfileBody> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                         child: Text(
-                          '1 Description that is too long in text format(Here Data is coming from API) jdlksaf j klkjjflkdsjfkddfdfsdfds ' +
-                              '2 Description that is too long in text format(Here Data is coming from API) d fsdfdsfsdfd dfdsfdsf sdfdsfsd d ' +
-                              '3 Description that is too long in text format(Here Data is coming from API)  adfsfdsfdfsdfdsf   dsf dfd fds fs' +
-                              '4 Description that is too long in text format(Here Data is coming from API) dsaf dsafdfdfsd dfdsfsda fdas dsad' +
-                              '5 Description that is too long in text format(Here Data is coming from API) dsfdsfd fdsfds fds fdsf dsfds fds ' +
-                              '6 Description that is too long in text format(Here Data is coming from API) asdfsdfdsf fsdf sdfsdfdsf sd dfdsf' +
-                              '7 Description that is too long in text format(Here Data is coming from API) df dsfdsfdsfdsfds df dsfds fds fsd' +
-                              '8 Description that is too long in text format(Here Data is coming from API)' +
-                              '9 Description that is too long in text format(Here Data is coming from API)' +
-                              '10 Description that is too long in text format(Here Data is coming from API)',
+                          """
+1 Deslksaf j klkjjflkdsjfkddfdfsdfd +
+'2) d fsdfdsfsdfd dfdsfdsf sdfdsfsd d ' +
+'3)  adfsfdsfdfsdfdsf   dsf dfd fds fs' +
+'4) dsaf dsafdfdfsd dfdsfsda fdas dsad' +
+'5) dsfdsfd fdsfds fds fdsf dsfds fds ' +
+'6) asdfsdfdsf fsdf sdfsdfdsf sd dfdsf' +
+'7) df dsfdsfdsfdsfds df dsfds fds fsd' +
+'8 Description coming from API)' +
+'9 Description coming from API)' +
+'4) dsaf dsafdfdfsd dfdsfsda fdas dsad' +
+'5) dsfdsfd fdsfds fds fdsf dsfds fds ' +
+'6) asdfsdfdsf fsdf sdfsdfdsf sd dfdsf' +
+'7) df dsfdsfdsfdsfds df dsfds fds fsd' +
+'10 Descriptios coming from API """,
                           style: TextStyle(
                             color: Colors.black,
                           ),
@@ -154,20 +152,23 @@ class _ProfileBodyState extends State<ProfileBody> {
     );
   }
 
-  Future<String> _getUsernameFromApi() async {
-    final preferences = await SharedPreferences.getInstance();
+  // Future<String> _getUsernameFromApi() async {
+  // final preferences = await SharedPreferences.getInstance();
 
-    try {
-      var dio = Dio();
-      dio.options.headers['Authorization'] = 'Client-ID ${Constants.clientId}';
+  // try {
+  //   var dio = Dio();
+  //   dio.options.headers['Authorization'] =
+  //'Client-ID ${Constants.clientId}';
 
-      var response = await dio.get(
-          '${Constants.getUserInformationsURL}${preferences.getString('account_username')}');
-      print(response.data['url']);
-      return response.data['url'] == null ? '' : response.data['url']!;
-    } catch (e) {
-      print(e);
-    }
-    return '';
-  }
+  //   var response = await dio.get(
+  //       '${Constants.getUserInformationsURL}$
+  // {preferences.getString('account_username')}');
+
+  //   print(response.data['url']);
+  //   return response.data['url'] == null ? '' : response.data['url']!;
+  // } catch (e) {
+  //   print(e);
+  // }
+  // return '';
+  // }
 }
