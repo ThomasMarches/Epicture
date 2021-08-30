@@ -1,11 +1,5 @@
-import 'dart:convert';
-
+import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:epicture/core/utils/constants.dart';
 
 class UserInformations {
   const UserInformations({
@@ -46,12 +40,17 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
   UserInformations? userInformations;
+  List<ImgurImages>? userImagesList;
 
   @override
   void initState() {
     super.initState();
-    _getUsernameFromApi(context).then((userInfos) => setState(() {
-          userInformations = userInfos;
+    ImgurDataSource.getUserInformations(context)
+        .then((userInfos) => setState(() {
+              userInformations = userInfos;
+            }));
+    ImgurDataSource.getUserImages(context).then((userImages) => setState(() {
+          userImagesList = userImages;
         }));
   }
 
@@ -148,6 +147,27 @@ class _ProfileBodyState extends State<ProfileBody> {
           ),
           const SizedBox(height: 10),
           Flexible(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20),
+              itemCount: userImagesList == null ? 0 : userImagesList!.length,
+              itemBuilder: (BuildContext ctx, index) {
+                return Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: Image.network(userImagesList![index].link).image,
+                        fit: BoxFit.fill,
+                      )),
+                );
+              },
+            ),
+          ),
+          Flexible(
             child: GridView.count(
               primary: false,
               crossAxisSpacing: 10,
@@ -207,21 +227,7 @@ class _ProfileBodyState extends State<ProfileBody> {
     if (userInformations != null && userInformations?.bio != null) {
       return userInformations!.bio!;
     }
-    return """
-1 Deslksaf j klkjjflkdsjfkddfdfsdfd +
-'2) d fsdfdsfsdfd dfdsfdsf sdfdsfsd d ' +
-'3)  adfsfdsfdfsdfdsf   dsf dfd fds fs' +
-'4) dsaf dsafdfdfsd dfdsfsda fdas dsad' +
-'5) dsfdsfd fdsfds fds fdsf dsfds fds ' +
-'6) asdfsdfdsf fsdf sdfsdfdsf sd dfdsf' +
-'7) df dsfdsfdsfdsfds df dsfds fds fsd' +
-'8 Description coming from API)' +
-'9 Description coming from API)' +
-'4) dsaf dsafdfdfsd dfdsfsda fdas dsad' +
-'5) dsfdsfd fdsfds fds fdsf dsfds fds ' +
-'6) asdfsdfdsf fsdf sdfsdfdsf sd dfdsf' +
-'7) df dsfdsfdsfdsfds df dsfds fds fsd' +
-'10 Descriptios coming from API """;
+    return 'No descritpion.';
   }
 
   String _getReputation() {
@@ -229,31 +235,5 @@ class _ProfileBodyState extends State<ProfileBody> {
       return userInformations!.reputation.toString();
     }
     return '0';
-  }
-
-  Future<UserInformations?> _getUsernameFromApi(BuildContext context) async {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      try {
-        var response = await http.get(
-            Uri.parse(
-                Constants.getUserInformationsURL + state.user.accountUsername),
-            headers: {'Authorization': 'Client-ID ${Constants.clientId}'});
-
-        if (response.statusCode != 200) {
-          throw (Exception(
-              'Error from API call GET /account/username/  Error code: ${response.statusCode}'));
-        }
-
-        final jsonResponse = jsonDecode(response.body);
-        final jsonData = jsonResponse['data'];
-
-        return UserInformations.fromMap(jsonData);
-      } catch (e) {
-        print(e);
-      }
-    }
-    return null;
   }
 }

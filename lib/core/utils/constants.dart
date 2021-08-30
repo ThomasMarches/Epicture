@@ -29,6 +29,8 @@ class Constants {
   // ! add the username after the /account/
   static const getUserInformationsURL = 'https://api.imgur.com/3/account/';
 
+  static const getUserImagesURL = 'https://api.imgur.com/3/account/me/images';
+
   // * https://apidocs.imgur.com/#3f80c836-8f49-4fb1-95a7-a4b058265d72
   static const generateAccessTokenURL = 'https://api.imgur.com/oauth2/token';
 
