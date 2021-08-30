@@ -11,14 +11,14 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  bloc: ^7.0.0
+  bloc: ^7.1.0
   dartz: ^0.10.0-nullsafety.2
   equatable: ^2.0.3
   flutter_bloc: ^7.1.0
   intl: ^0.17.0
   logger: ^1.0.0
   flutter_webview_plugin: ^0.4.0
-  dio: ^4.0.0
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:
