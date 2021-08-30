@@ -158,7 +158,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                 return Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      shape: BoxShape.rectangle,
                       image: DecorationImage(
                         image: Image.network(userImagesList![index].link).image,
                         fit: BoxFit.fill,
@@ -167,43 +167,6 @@ class _ProfileBodyState extends State<ProfileBody> {
               },
             ),
           ),
-          Flexible(
-            child: GridView.count(
-              primary: false,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 3,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              physics: const ScrollPhysics(),
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-          )
         ],
       ),
     );

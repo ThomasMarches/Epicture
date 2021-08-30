@@ -81,7 +81,7 @@ class ImgurImages {
   final int size;
   final int views;
   final String? vote;
-  final String? favorite;
+  final bool favorite;
   final String? section;
   final String accountUrl;
   final int accountId;
