@@ -10,6 +10,7 @@ import 'core/presentation/app/app_bloc_observer.dart';
 import 'core/presentation/bloc/user_bloc/user_bloc.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = AppBlocObserver();
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
