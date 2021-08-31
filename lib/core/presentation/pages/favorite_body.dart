@@ -1,6 +1,9 @@
+import 'package:epicture/core/data/models/imgur_favorite_image.dart';
+import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-class FavoriteBody extends StatelessWidget {
+class FavoriteBody extends StatefulWidget {
   const FavoriteBody({
     Key? key,
   }) : super(key: key);
@@ -8,61 +11,44 @@ class FavoriteBody extends StatelessWidget {
   static const routeName = '/favoritepage';
 
   @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(10),
-      crossAxisSpacing: 5,
-      mainAxisSpacing: 5,
-      crossAxisCount: 2,
-      children: _getImageList(context),
-    );
+  _FavoriteBodyState createState() => _FavoriteBodyState();
+}
+
+class _FavoriteBodyState extends State<FavoriteBody> {
+  List<ImgurFavoriteImage>? userFavoriteImagesList;
+
+  @override
+  void initState() {
+    super.initState();
+    ImgurDataSource.getUserFavoriteImages(context)
+        .then((userFavoritesImages) => setState(() {
+              userFavoriteImagesList = userFavoritesImages;
+            }));
   }
 
-  List<Widget> _getImageList(BuildContext context) {
-    return <Widget>[
-      Card(
-        elevation: 0,
-        margin: const EdgeInsets.all(0),
-        // ! changed to SizedBox for code formatting but needs be checked
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width / 3,
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 5),
-                child: Text(
-                  'Titre de l\'image',
-                  style: TextStyle(fontSize: 15),
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20),
+      itemCount:
+          userFavoriteImagesList == null ? 0 : userFavoriteImagesList!.length,
+      itemBuilder: (BuildContext ctx, index) {
+        return Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(
+                  userFavoriteImagesList![index].link,
                 ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.red,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                ),
-                margin: const EdgeInsets.all(5),
-                width: (MediaQuery.of(context).size.width / 3),
-                height: 200,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.favorite_outline,
-                      color: Colors.grey,
-                    ),
-                  )
-                ]),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ];
+                fit: BoxFit.fill,
+              )),
+        );
+      },
+    );
   }
 }
