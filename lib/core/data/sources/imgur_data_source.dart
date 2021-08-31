@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:epicture/core/data/models/imgur_favorite_image.dart';
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/models/imgur_profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -231,9 +232,11 @@ class ImgurDataSource {
       final state = userBloc.state as UserLoadedState;
       try {
         var response = await http.get(
-            Uri.parse(
-                Constants.getUserInformationsURL + state.user.accountUsername),
-            headers: {'Authorization': 'Client-ID ${Constants.clientId}'});
+          Uri.parse(
+            Constants.getUserInformationsURL + state.user.accountUsername,
+          ),
+          headers: {'Authorization': 'Client-ID ${Constants.clientId}'},
+        );
 
         if (response.statusCode != 200) {
           throw (Exception(
@@ -270,7 +273,10 @@ class ImgurDataSource {
         final jsonData = jsonResponse['data'];
 
         return List<ImgurProfileImage>.from(
-            jsonData.map((model) => ImgurProfileImage.fromMap(model)));
+          jsonData.map(
+            (model) => ImgurProfileImage.fromMap(model),
+          ),
+        );
       } catch (e) {
         log(e.toString());
       }
@@ -287,7 +293,10 @@ class ImgurDataSource {
       try {
         var response = await http.get(
             Uri.parse(
-                Constants.getUserFavoriteImages(state.user.accountUsername)),
+              Constants.getUserFavoriteImagesURL(
+                state.user.accountUsername,
+              ),
+            ),
             headers: {'Authorization': 'Bearer ${state.user.accessToken}'});
 
         if (response.statusCode != 200) {
@@ -299,7 +308,57 @@ class ImgurDataSource {
         final jsonData = jsonResponse['data'];
 
         return List<ImgurFavoriteImage>.from(
-            jsonData.map((model) => ImgurFavoriteImage.fromMap(model)));
+          jsonData.map(
+            (model) => ImgurFavoriteImage.fromMap(model),
+          ),
+        );
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return null;
+  }
+
+  static Future<List<ImgurImages>?> getUserAssociatedImages(
+    BuildContext context,
+    String? tag,
+  ) async {
+    var userAssociatedImageList = [];
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      try {
+        var response = await http.get(
+            Uri.parse(
+              Constants.searchImagesURL(
+                tag,
+              ),
+            ),
+            headers: {'Authorization': 'Client-ID ${Constants.clientId}'});
+
+        if (response.statusCode != 200) {
+          throw (Exception(
+              'Error from API call GET /gallery/search  Error code: ${response.statusCode}'));
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse['data'];
+
+        if (jsonData != null) {
+          jsonData.forEach((dynamic gallery) {
+            if (gallery['images'] != null) {
+              gallery['images'].forEach((dynamic img) {
+                userAssociatedImageList.add(img);
+              });
+            }
+          });
+        }
+
+        print(userAssociatedImageList);
+        return List<ImgurImages>.from(
+          userAssociatedImageList.map(
+            (model) => ImgurImages.fromMap(model),
+          ),
+        );
       } catch (e) {
         log(e.toString());
       }

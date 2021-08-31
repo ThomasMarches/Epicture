@@ -43,10 +43,12 @@ class Constants {
     return 'https://api.imgur.com/3/account/$username/settings';
   }
 
-  static const getHomePageImages =
-      'https://api.imgur.com/3/gallery/search/top/all/0?q_all=memes';
-  static String getUserFavoriteImages(String username) {
+  static String getUserFavoriteImagesURL(String username) {
     return 'https://api.imgur.com/3/account/$username/favorites/';
+  }
+
+  static String searchImagesURL(String? tag) {
+    return tag == null ? 'https://api.imgur.com/3/gallery/search/' : 'https://api.imgur.com/3/gallery/search/time/all/1?q_all=$tag&q_type=jgp&q_type=png';
   }
 
   static const loginURL =
