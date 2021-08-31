@@ -1,3 +1,4 @@
+import 'package:epicture/core/data/models/imgur_profile_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,7 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
   UserInformations? userInformations;
-  List<ImgurImages>? userImagesList;
+  List<ImgurProfileImage>? userImagesList;
 
   @override
   void initState() {
