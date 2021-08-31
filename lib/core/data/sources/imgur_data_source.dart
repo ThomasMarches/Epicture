@@ -98,6 +98,128 @@ class ImgurImages {
   final String link;
 }
 
+class HomePageImages {
+  const HomePageImages({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.datetime,
+    required this.type,
+    required this.animated,
+    required this.width,
+    required this.height,
+    required this.size,
+    required this.views,
+    required this.bandwidth,
+    required this.vote,
+    required this.favorite,
+    required this.nsfw,
+    required this.section,
+    required this.accountUrl,
+    required this.accountId,
+    required this.isAd,
+    required this.inMostViral,
+    required this.hasSound,
+    required this.tags,
+    required this.adType,
+    required this.adUrl,
+    required this.edited,
+    required this.inGallery,
+    required this.topic,
+    required this.topicId,
+    required this.deletehash,
+    required this.name,
+    required this.link,
+    required this.looping,
+    required this.commentCount,
+    required this.favoriteCount,
+    required this.ups,
+    required this.downs,
+    required this.points,
+    required this.score,
+  });
+
+  factory HomePageImages.fromMap(Map<String, dynamic> map) {
+    return HomePageImages(
+      id: map['id'],
+      title: map['title'],
+      description: map['description'],
+      datetime: DateTime.fromMillisecondsSinceEpoch(map['datetime']),
+      type: map['type'],
+      animated: map['animated'],
+      width: map['width'],
+      height: map['height'],
+      size: map['size'],
+      views: map['views'],
+      bandwidth: map['bandwidth'],
+      vote: map['vote'],
+      favorite: map['favorite'],
+      nsfw: map['nsfw'],
+      section: map['section'],
+      accountUrl: map['account_url'],
+      accountId: map['account_id'],
+      isAd: map['is_ad'],
+      inMostViral: map['in_most_viral'],
+      hasSound: map['has_sound'],
+      tags: List.from(map['tags']),
+      adType: map['ad_type'],
+      adUrl: map['ad_url'],
+      edited: map['edited'],
+      inGallery: map['in_gallery'],
+      topic: map['topic'],
+      topicId: map['topic_id'],
+      deletehash: map['deletehash'],
+      name: map['name'],
+      link: map['link'],
+      looping: map['looping'],
+      commentCount: map['comment_count'],
+      favoriteCount: map['favorite_count'],
+      ups: map['ups'],
+      downs: map['downs'],
+      points: map['points'],
+      score: map['score'],
+    );
+  }
+
+  final String id;
+  final String? title;
+  final String? description;
+  final DateTime datetime;
+  final String type;
+  final bool animated;
+  final int width;
+  final int height;
+  final int size;
+  final int views;
+  final int bandwidth;
+  final String? vote;
+  final bool favorite;
+  final bool nsfw;
+  final String? section;
+  final String accountUrl;
+  final int accountId;
+  final bool isAd;
+  final bool inMostViral;
+  final bool hasSound;
+  final List tags;
+  final int adType;
+  final String adUrl;
+  final int edited;
+  final bool inGallery;
+  final bool? topic;
+  final int topicId;
+  final String deletehash;
+  final String name;
+  final String link;
+  final bool looping;
+  final int commentCount;
+  final int favoriteCount;
+  final int ups;
+  final int downs;
+  final int points;
+  final int score;
+}
+
 class ImgurDataSource {
   static Future<UserInformations?> getUserInformations(
     BuildContext context,
@@ -147,6 +269,34 @@ class ImgurDataSource {
 
         return List<ImgurImages>.from(
             jsonData.map((model) => ImgurImages.fromMap(model)));
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return null;
+  }
+
+  static Future<List<HomePageImages>?> getHomePageImages(
+    BuildContext context,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        var response = await http.get(Uri.parse(Constants.getHomePageImages),
+            headers: {'Authorization': 'Bearer ${state.user.accessToken}'});
+
+        if (response.statusCode != 200) {
+          throw (Exception(
+              'Error from API call GET gallery/search/top/all  Error code: ${response.statusCode}'));
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse['data'];
+        print(jsonData);
+
+        return List<HomePageImages>.from(
+            jsonData.map((model) => HomePageImages.fromMap(model)));
       } catch (e) {
         log(e.toString());
       }

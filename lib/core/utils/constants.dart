@@ -43,6 +43,9 @@ class Constants {
     return 'https://api.imgur.com/3/account/$username/settings';
   }
 
+  static const getHomePageImages =
+      'https://api.imgur.com/3/gallery/search/top/all/0?q_all=memes';
+
   static const loginURL =
       'https://api.imgur.com/oauth2/authorize?client_id=8e9c6eeae958099&response_type=token';
 }
