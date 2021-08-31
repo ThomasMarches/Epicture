@@ -16,6 +16,7 @@ class FavoriteBody extends StatefulWidget {
 
 class _FavoriteBodyState extends State<FavoriteBody> {
   List<ImgurFavoriteImage>? userFavoriteImagesList;
+  List<bool>? userLikedPictures;
 
   @override
   void initState() {
@@ -23,30 +24,59 @@ class _FavoriteBodyState extends State<FavoriteBody> {
     ImgurDataSource.getUserFavoriteImages(context)
         .then((userFavoritesImages) => setState(() {
               userFavoriteImagesList = userFavoritesImages;
+              userLikedPictures = List.generate(
+                  userFavoriteImagesList!.length, (index) => true);
             }));
   }
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20),
+          childAspectRatio: 3 / 4,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10),
       itemCount:
           userFavoriteImagesList == null ? 0 : userFavoriteImagesList!.length,
       itemBuilder: (BuildContext ctx, index) {
-        return Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                  userFavoriteImagesList![index].link,
+        return Card(
+          child: Column(
+            children: [
+              Flexible(
+                flex: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(
+                          userFavoriteImagesList![index].link,
+                        ),
+                        fit: BoxFit.fill,
+                      )),
                 ),
-                fit: BoxFit.fill,
-              )),
+              ),
+              Flexible(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      userLikedPictures![index] = !userLikedPictures![index];
+                    });
+                  },
+                  icon: Icon(
+                    userLikedPictures?[index] == true
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
