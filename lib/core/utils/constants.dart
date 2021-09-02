@@ -24,31 +24,34 @@ class Constants {
   ];
 
   static const clientId = '8e9c6eeae958099';
+  static const baseUrl = 'https://api.imgur.com/3';
 
-  // * https://api.imgur.com/models/account
-  // ! add the username after the /account/
-  static const getUserInformationsURL = 'https://api.imgur.com/3/account/';
+  static const getUserInformationsURL = '$baseUrl/account/';
 
-  static const getUserImagesURL = 'https://api.imgur.com/3/account/me/images';
+  static const getUserImagesURL = '$baseUrl/account/me/images';
 
-  // * https://apidocs.imgur.com/#3f80c836-8f49-4fb1-95a7-a4b058265d72
   static const generateAccessTokenURL = 'https://api.imgur.com/oauth2/token';
 
-  // * https://apidocs.imgur.com/#ce57e346-3515-4381-a772-ef5ade60bdee
   static const getAccountSettingsURL =
-      'https://api.imgur.com/3/account/me/settings';
+      '$baseUrl/account/me/settings';
 
-  // * https://apidocs.imgur.com/#ce57e346-3515-4381-a772-ef5ade60bdee
   static String changeAccountSettingsURL(String username) {
-    return 'https://api.imgur.com/3/account/$username/settings';
+    return '$baseUrl/account/$username/settings';
   }
 
+  static const getHomePageImages =
+      'https://api.imgur.com/3/gallery/hot/viral/top/1?showViral=true&mature=false&album_previews=false';
+
   static String getUserFavoriteImagesURL(String username) {
-    return 'https://api.imgur.com/3/account/$username/favorites/';
+    return '$baseUrl/account/$username/favorites/';
   }
 
   static String searchImagesURL(String? tag) {
-    return tag == null ? 'https://api.imgur.com/3/gallery/search/' : 'https://api.imgur.com/3/gallery/search/time/all/1?q_all=$tag&q_type=jgp&q_type=png';
+    return tag == null ? '$baseUrl/gallery/search/' : '$baseUrl/gallery/search/time/all/1?q_all=$tag&q_type=jgp&q_type=png';
+  }
+
+  static String getFavoriteAnImageURL(String hash) {
+    return '$baseUrl/image/$hash/favorite';
   }
 
   static const loginURL =

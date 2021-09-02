@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:flutter/material.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
