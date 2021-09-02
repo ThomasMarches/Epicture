@@ -32,7 +32,7 @@ class _UploadBodyState extends State<UploadBody> {
       cameras = await availableCameras();
       initializeCamera(selectedCamera); //Initially selectedCamera = 0
     } on CameraException catch (_) {
-      debugPrint("Some error occured!");
+      debugPrint("Some error occured on _setupCamra() !");
     }
 
     if (!mounted) {
