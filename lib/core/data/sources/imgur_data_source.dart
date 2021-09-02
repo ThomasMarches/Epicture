@@ -156,7 +156,7 @@ class ImgurDataSource {
   static Future<List<ImgurImages>?> getHomePageImages(
     BuildContext context,
   ) async {
-    var homePageImagesList = [];
+    final homePageImagesList = [];
     final userBloc = BlocProvider.of<UserBloc>(context);
     if (userBloc.state is UserLoadedState) {
       final state = userBloc.state as UserLoadedState;
@@ -175,9 +175,7 @@ class ImgurDataSource {
         if (jsonData != null) {
           jsonData.forEach((dynamic gallery) {
             if (gallery['images'] != null) {
-              gallery['images'].forEach((dynamic img) {
-                homePageImagesList.add(img);
-              });
+              gallery['images'].forEach(homePageImagesList.add);
             }
           });
         }

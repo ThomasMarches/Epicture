@@ -32,8 +32,7 @@ class Constants {
 
   static const generateAccessTokenURL = 'https://api.imgur.com/oauth2/token';
 
-  static const getAccountSettingsURL =
-      '$baseUrl/account/me/settings';
+  static const getAccountSettingsURL = '$baseUrl/account/me/settings';
 
   static String changeAccountSettingsURL(String username) {
     return '$baseUrl/account/$username/settings';
@@ -47,7 +46,9 @@ class Constants {
   }
 
   static String searchImagesURL(String? tag) {
-    return tag == null ? '$baseUrl/gallery/search/' : '$baseUrl/gallery/search/time/all/1?q_all=$tag&q_type=jgp&q_type=png';
+    return tag == null
+        ? '$baseUrl/gallery/search/'
+        : '$baseUrl/gallery/search/time/all/1?q_all=$tag&q_type=jgp&q_type=png';
   }
 
   static String getFavoriteAnImageURL(String hash) {
