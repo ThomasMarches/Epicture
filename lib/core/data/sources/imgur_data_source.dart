@@ -141,11 +141,18 @@ class ImgurDataSource {
             }
           });
         }
-        return List<ImgurImages>.from(
+        final finalList = List<ImgurImages>.from(
           userAssociatedImageList.map(
             (model) => ImgurImages.fromMap(model),
           ),
         );
+        finalList.removeWhere(
+          (element) {
+            return (element.type != 'jpg' && element.type != 'png') ||
+                element.height > 1000;
+          },
+        );
+        return finalList;
       } catch (e) {
         log(e.toString());
       }
@@ -186,10 +193,12 @@ class ImgurDataSource {
             },
           ),
         );
-        finalList.removeWhere((element) {
-          return (element.type != 'jpg' && element.type != 'png') ||
-              element.height > 1000;
-        });
+        finalList.removeWhere(
+          (element) {
+            return (element.type != 'jpg' && element.type != 'png') ||
+                element.height > 1000;
+          },
+        );
         return finalList;
       } catch (e) {
         log(e.toString());

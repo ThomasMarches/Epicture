@@ -15,18 +15,7 @@ class SearchBody extends StatefulWidget {
 
 class _SearchBodyState extends State<SearchBody> {
   List<ImgurImages>? userAssociatedImageList;
-
-  @override
-  void initState() {
-    super.initState();
-    ImgurDataSource.getUserAssociatedImages(context, null).then(
-      (userImagesList) => setState(
-        () {
-          userAssociatedImageList = userImagesList;
-        },
-      ),
-    );
-  }
+  var hasRequested = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,51 +27,70 @@ class _SearchBodyState extends State<SearchBody> {
             labelText: 'Search',
           ),
           onSubmitted: (value) {
+            setState(() {
+              hasRequested = true;
+            });
             ImgurDataSource.getUserAssociatedImages(context, value).then(
               (userImagesList) => setState(
                 () {
                   userAssociatedImageList = userImagesList;
+                  hasRequested = false;
                 },
               ),
             );
           },
           maxLength: 20,
         ),
-        Flexible(
-          child: GridView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                childAspectRatio: 3 / 4,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-            itemCount: userAssociatedImageList == null
-                ? 0
-                : userAssociatedImageList!.length,
-            itemBuilder: (BuildContext ctx, index) {
-              return Card(
-                child: Column(
-                  children: [
-                    Flexible(
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            image: DecorationImage(
-                              image: Image.network(
-                                      userAssociatedImageList![index].link)
-                                  .image,
-                              fit: BoxFit.fill,
-                            )),
+        userAssociatedImageList == null
+            ? hasRequested == true
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : const Center()
+            : Flexible(
+                child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 3 / 4,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
+                  itemCount: userAssociatedImageList == null
+                      ? 0
+                      : userAssociatedImageList!.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return Card(
+                      child: Column(
+                        children: [
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  image: DecorationImage(
+                                    image: Image.network(
+                                      userAssociatedImageList![index].link,
+                                      loadingBuilder: (
+                                        BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress,
+                                      ) {
+                                        return Center(
+                                          child: child,
+                                        );
+                                      },
+                                    ).image,
+                                    fit: BoxFit.fill,
+                                  )),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
+              ),
       ],
     );
   }
