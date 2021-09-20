@@ -1,4 +1,32 @@
+import 'package:epicture/core/data/models/imgur_profile_image.dart';
+import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:flutter/material.dart';
+
+class UserInformations {
+  const UserInformations({
+    required this.userName,
+    required this.reputation,
+    required this.bio,
+    required this.reputationName,
+    required this.avatar,
+  });
+
+  factory UserInformations.fromMap(Map<String, dynamic> map) {
+    return UserInformations(
+      userName: map['url'] as String,
+      reputation: map['reputation'] as int,
+      bio: map['bio'] as String?,
+      reputationName: map['reputation_name'] as String,
+      avatar: map['avatar'] as String?,
+    );
+  }
+
+  final String userName;
+  final int reputation;
+  final String? bio;
+  final String reputationName;
+  final String? avatar;
+}
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody({
@@ -12,13 +40,20 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  // _ProfileBodyState() {
-  //   _getUsernameFromApi().then((String value) => setState(() {
-  //         userName = value;
-  //       }));
-  // }
+  UserInformations? userInformations;
+  List<ImgurProfileImage>? userImagesList;
 
-  String? userName;
+  @override
+  void initState() {
+    super.initState();
+    ImgurDataSource.getUserInformations(context)
+        .then((userInfos) => setState(() {
+              userInformations = userInfos;
+            }));
+    ImgurDataSource.getUserImages(context).then((userImages) => setState(() {
+          userImagesList = userImages;
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +62,7 @@ class _ProfileBodyState extends State<ProfileBody> {
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(40.0),
+            borderRadius: BorderRadius.circular(40),
             child: Container(
               height: MediaQuery.of(context).size.height / 3,
               color: Colors.grey[300],
@@ -40,28 +75,40 @@ class _ProfileBodyState extends State<ProfileBody> {
                         margin: const EdgeInsets.symmetric(vertical: 15),
                         height: 100,
                         width: 100,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey,
-                        ),
+                        decoration: (userInformations != null &&
+                                userInformations!.avatar != null)
+                            ? BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image:
+                                      Image.network(userInformations!.avatar!)
+                                          .image,
+                                  fit: BoxFit.fill,
+                                ))
+                            : const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey,
+                              ),
                       ),
                       const Spacer(),
                       Column(
                         children: [
                           Text(
-                            (userName == null) ? 'Username' : userName!,
+                            _getUsername(),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           Row(
-                            children: const [
-                              Text('0'),
-                              Text(
+                            children: [
+                              Text(_getReputation()),
+                              const Text(
                                 ' • ',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
-                              Text('Neutral'),
+                              Text(_getReputationName()),
                             ],
                           ),
                         ],
@@ -74,28 +121,17 @@ class _ProfileBodyState extends State<ProfileBody> {
                     indent: 20,
                     endIndent: 20,
                   ),
-                  const Expanded(
+                  Expanded(
                     child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical, //.horizontal
                       child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          top: 10,
+                        ),
                         child: Text(
-                          """
-1 Deslksaf j klkjjflkdsjfkddfdfsdfd +
-'2) d fsdfdsfsdfd dfdsfdsf sdfdsfsd d ' +
-'3)  adfsfdsfdfsdfdsf   dsf dfd fds fs' +
-'4) dsaf dsafdfdfsd dfdsfsda fdas dsad' +
-'5) dsfdsfd fdsfds fds fdsf dsfds fds ' +
-'6) asdfsdfdsf fsdf sdfsdfdsf sd dfdsf' +
-'7) df dsfdsfdsfdsfds df dsfds fds fsd' +
-'8 Description coming from API)' +
-'9 Description coming from API)' +
-'4) dsaf dsafdfdfsd dfdsfsda fdas dsad' +
-'5) dsfdsfd fdsfds fds fdsf dsfds fds ' +
-'6) asdfsdfdsf fsdf sdfsdfdsf sd dfdsf' +
-'7) df dsfdsfdsfdsfds df dsfds fds fsd' +
-'10 Descriptios coming from API """,
-                          style: TextStyle(
+                          _getBiography(),
+                          style: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -111,64 +147,55 @@ class _ProfileBodyState extends State<ProfileBody> {
           ),
           const SizedBox(height: 10),
           Flexible(
-            child: GridView.count(
-              primary: false,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 3,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              physics: const ScrollPhysics(),
-              children: <Widget>[
-                Container(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20),
+              itemCount: userImagesList == null ? 0 : userImagesList!.length,
+              itemBuilder: (BuildContext ctx, index) {
+                return Container(
                   padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey,
-                ),
-              ],
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: Image.network(userImagesList![index].link).image,
+                        fit: BoxFit.fill,
+                      )),
+                );
+              },
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  // Future<String> _getUsernameFromApi() async {
-  // final preferences = await SharedPreferences.getInstance();
+  String _getUsername() {
+    if (userInformations != null) {
+      return userInformations!.userName;
+    }
+    return 'Username';
+  }
 
-  // try {
-  //   var dio = Dio();
-  //   dio.options.headers['Authorization'] =
-  //'Client-ID ${Constants.clientId}';
+  String _getReputationName() {
+    if (userInformations != null) {
+      return userInformations!.reputationName;
+    }
+    return 'Neutral';
+  }
 
-  //   var response = await dio.get(
-  //       '${Constants.getUserInformationsURL}$
-  // {preferences.getString('account_username')}');
+  String _getBiography() {
+    if (userInformations != null && userInformations?.bio != null) {
+      return userInformations!.bio!;
+    }
+    return 'No descritpion.';
+  }
 
-  //   print(response.data['url']);
-  //   return response.data['url'] == null ? '' : response.data['url']!;
-  // } catch (e) {
-  //   print(e);
-  // }
-  // return '';
-  // }
+  String _getReputation() {
+    if (userInformations != null) {
+      return userInformations!.reputation.toString();
+    }
+    return '0';
+  }
 }

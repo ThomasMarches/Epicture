@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:epicture/core/utils/constants.dart';
+import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -13,13 +13,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var selectedIndex = 0;
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final linearGradient = const LinearGradient(
       colors: Constants.epictureTextGradient,
-    ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+    ).createShader(const Rect.fromLTWH(0, 0, 200, 70));
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -48,7 +48,7 @@ AppBar epictureAppBar(Shader linearGradient) {
       title: Text(
         'Epicture',
         style: TextStyle(
-            fontSize: 40.0,
+            fontSize: 40,
             fontWeight: FontWeight.bold,
             foreground: Paint()..shader = linearGradient),
       ));

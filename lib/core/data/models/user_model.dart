@@ -14,22 +14,23 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      clientId: map['clientId'],
-      biography: map['biography'],
-      avatarName: map['avatarName'],
-      avatarPath: map['avatarPath'],
-      accessToken: map['accessToken'],
-      accountUsername: map['accountUsername'],
-      accountId: map['accountId'],
-      refreshToken: map['refreshToken'],
+      clientId: map['clientId'] as String,
+      biography: map['biography'] as String,
+      avatarName: map['avatarName'] as String,
+      avatarPath: map['avatarPath'] as String,
+      accessToken: map['accessToken'] as String,
+      accountUsername: map['accountUsername'] as String,
+      accountId: map['accountId'] as String,
+      refreshToken: map['refreshToken'] as String,
     );
   }
 
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source));
+  factory UserModel.fromJson(String source) {
+      return UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic> {
       'clientId': clientId,
       'biography': biography,
       'avatarName': avatarName,

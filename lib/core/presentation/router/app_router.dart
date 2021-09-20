@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 // import 'package:epicture/core/presentation/pages/favorite_body.dart';
 import 'package:epicture/core/presentation/pages/login_page.dart';
+import 'package:flutter/material.dart';
 // import 'package:epicture/core/presentation/pages/search_body.dart';
 // import 'package:epicture/core/presentation/pages/upload_body.dart';
 
@@ -12,7 +12,7 @@ class AppRouter {
     //   case HomePage.routeName:
     //     return MaterialPageRoute(builder: (_) => const HomePage());
     //   case LoginPage.routeName:
-    return MaterialPageRoute(builder: (_) => const LoginPage());
+    return MaterialPageRoute<LoginPage>(builder: (_) => const LoginPage());
     //   case FavoriteBody.routeName:
     //     return MaterialPageRoute(builder: (_) => const FavoriteBody());
     //   case UploadBody.routeName:
