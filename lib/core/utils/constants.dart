@@ -34,8 +34,18 @@ class Constants {
 
   static const getAccountSettingsURL = '$baseUrl/account/me/settings';
 
+  static const createCommentURL = '$baseUrl/comment/';
+
+  static String commentChangeURL(String commentId) {
+    return '$baseUrl/comment/$commentId';
+  }
+
   static String changeAccountSettingsURL(String username) {
     return '$baseUrl/account/$username/settings';
+  }
+
+  static String voteOnCommentURL(String commentId, String vote) {
+    return '$baseUrl/comment/$commentId/vote/$vote';
   }
 
   static const getHomePageImages =
@@ -43,6 +53,10 @@ class Constants {
 
   static String getUserFavoriteImagesURL(String username) {
     return '$baseUrl/account/$username/favorites/';
+  }
+
+  static String getImageCommentsURL(String imageID) {
+    return 'https://api.imgur.com/3/gallery/$imageID/comments';
   }
 
   static String searchImagesURL(String? tag) {

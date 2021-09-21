@@ -4,7 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class UploadBody extends StatefulWidget {
-  const UploadBody({ Key? key }) : super(key: key);
+  const UploadBody({Key? key}) : super(key: key);
 
   @override
   _UploadBodyState createState() => _UploadBodyState();

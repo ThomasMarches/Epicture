@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:epicture/core/data/models/imgur_favorite_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class FavoriteBody extends StatefulWidget {
@@ -46,15 +47,33 @@ class _FavoriteBodyState extends State<FavoriteBody> {
             children: [
               Flexible(
                 flex: 5,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(
-                          userFavoriteImagesList![index].link,
-                        ),
-                        fit: BoxFit.fill,
-                      )),
+                child: InkWell(
+                  onTap: () {
+                    Utils.moveToImagePage(
+                      userFavoriteImagesList![index].id,
+                      userFavoriteImagesList![index].type,
+                      userFavoriteImagesList![index].width,
+                      userFavoriteImagesList![index].height,
+                      userFavoriteImagesList![index].vote,
+                      userFavoriteImagesList![index].favorite,
+                      userFavoriteImagesList![index].title,
+                      userFavoriteImagesList![index].description,
+                      userFavoriteImagesList![index].datetime,
+                      userFavoriteImagesList![index].section,
+                      userFavoriteImagesList![index].link,
+                      context,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        userFavoriteImagesList![index].link,
+                      ),
+                      fit: BoxFit.fill,
+                    )),
+                  ),
                 ),
               ),
               Flexible(

@@ -38,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
           accountUsername: uri.queryParameters['account_username']!,
         );
         if (_context != null) {
-          // ignore: use_build_context_synchronously
           _notifyBloc(context);
         }
       }

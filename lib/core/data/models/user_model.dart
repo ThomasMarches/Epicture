@@ -26,11 +26,11 @@ class UserModel {
   }
 
   factory UserModel.fromJson(String source) {
-      return UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+    return UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic> {
+    return <String, dynamic>{
       'clientId': clientId,
       'biography': biography,
       'avatarName': avatarName,

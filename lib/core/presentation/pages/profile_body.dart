@@ -159,9 +159,9 @@ class _ProfileBodyState extends State<ProfileBody> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: Image.network(userImagesList![index].link).image,
-                        fit: BoxFit.fill,
-                      )),
+                    image: Image.network(userImagesList![index].link).image,
+                    fit: BoxFit.fill,
+                  )),
                 );
               },
             ),

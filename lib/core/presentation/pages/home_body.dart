@@ -1,5 +1,6 @@
 import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 // import '../../../l10n/l10n.dart';
 
@@ -23,6 +24,7 @@ class _HomeBodyState extends State<HomeBody> {
       (homePageImages) => setState(
         () {
           homePageImagesList = homePageImages;
+          if (homePageImagesList == null) return;
           userLikedPictures = List.generate(homePageImagesList!.length,
               (index) => homePageImagesList![index].favorite);
         },
@@ -39,6 +41,8 @@ class _HomeBodyState extends State<HomeBody> {
             color: Colors.grey[300],
             child: Align(
               child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
                 itemCount:
                     homePageImagesList == null ? 0 : homePageImagesList!.length,
                 itemBuilder: (BuildContext ctx, index) {
@@ -62,21 +66,40 @@ class _HomeBodyState extends State<HomeBody> {
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                image: DecorationImage(
-                                  image: Image.network(
-                                          homePageImagesList![index].link)
-                                      .image,
-                                  fit: BoxFit.fill,
+                            InkWell(
+                              onTap: () {
+                                Utils.moveToImagePage(
+                                  homePageImagesList![index].id,
+                                  homePageImagesList![index].type,
+                                  homePageImagesList![index].width,
+                                  homePageImagesList![index].height,
+                                  homePageImagesList![index].vote,
+                                  homePageImagesList![index].favorite,
+                                  homePageImagesList![index].title,
+                                  homePageImagesList![index].description,
+                                  homePageImagesList![index].datetime,
+                                  homePageImagesList![index].section,
+                                  homePageImagesList![index].link,
+                                  context,
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  image: DecorationImage(
+                                    image: Image.network(
+                                            homePageImagesList![index].link)
+                                        .image,
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
+                                margin: const EdgeInsets.all(5),
+                                width: MediaQuery.of(context).size.width - 50,
+                                height: homePageImagesList![index]
+                                    .height
+                                    .toDouble(),
                               ),
-                              margin: const EdgeInsets.all(5),
-                              width: MediaQuery.of(context).size.width - 50,
-                              height:
-                                  homePageImagesList![index].height.toDouble(),
                             ),
                             Padding(
                               padding:

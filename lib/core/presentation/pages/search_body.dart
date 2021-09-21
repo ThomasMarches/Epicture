@@ -1,5 +1,6 @@
 import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class SearchBody extends StatefulWidget {
@@ -21,26 +22,29 @@ class _SearchBodyState extends State<SearchBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 10),
-        TextField(
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Search',
+        Padding(
+          padding:
+              const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5),
+          child: TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Search',
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                hasRequested = true;
+              });
+              ImgurDataSource.getUserAssociatedImages(context, value).then(
+                (userImagesList) => setState(
+                  () {
+                    userAssociatedImageList = userImagesList;
+                    hasRequested = false;
+                  },
+                ),
+              );
+            },
+            maxLength: 20,
           ),
-          onSubmitted: (value) {
-            setState(() {
-              hasRequested = true;
-            });
-            ImgurDataSource.getUserAssociatedImages(context, value).then(
-              (userImagesList) => setState(
-                () {
-                  userAssociatedImageList = userImagesList;
-                  hasRequested = false;
-                },
-              ),
-            );
-          },
-          maxLength: 20,
         ),
         if (userAssociatedImageList == null)
           hasRequested == true
@@ -66,24 +70,42 @@ class _SearchBodyState extends State<SearchBody> {
                   child: Column(
                     children: [
                       Flexible(
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image: Image.network(
+                        child: InkWell(
+                          onTap: () {
+                            Utils.moveToImagePage(
+                              userAssociatedImageList![index].id,
+                              userAssociatedImageList![index].type,
+                              userAssociatedImageList![index].width,
+                              userAssociatedImageList![index].height,
+                              userAssociatedImageList![index].vote,
+                              userAssociatedImageList![index].favorite,
+                              userAssociatedImageList![index].title,
+                              userAssociatedImageList![index].description,
+                              userAssociatedImageList![index].datetime,
+                              userAssociatedImageList![index].section,
                               userAssociatedImageList![index].link,
-                              loadingBuilder: (
-                                BuildContext context,
-                                Widget child,
-                                ImageChunkEvent? loadingProgress,
-                              ) {
-                                return Center(
-                                  child: child,
-                                );
-                              },
-                            ).image,
-                            fit: BoxFit.fill,
-                          )),
+                              context,
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                              image: Image.network(
+                                userAssociatedImageList![index].link,
+                                loadingBuilder: (
+                                  BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress,
+                                ) {
+                                  return Center(
+                                    child: child,
+                                  );
+                                },
+                              ).image,
+                              fit: BoxFit.fill,
+                            )),
+                          ),
                         ),
                       ),
                     ],

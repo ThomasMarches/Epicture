@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:epicture/core/data/models/imgur_comments.dart';
 import 'package:epicture/core/data/models/imgur_favorite_image.dart';
 import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/models/imgur_profile_image.dart';
@@ -84,12 +85,13 @@ class ImgurDataSource {
       final state = userBloc.state as UserLoadedState;
       try {
         final response = await http.get(
-            Uri.parse(
-              Constants.getUserFavoriteImagesURL(
-                state.user.accountUsername,
-              ),
+          Uri.parse(
+            Constants.getUserFavoriteImagesURL(
+              state.user.accountUsername,
             ),
-            headers: {'Authorization': 'Bearer ${state.user.accessToken}'});
+          ),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+        );
 
         if (response.statusCode != 200) {
           throw Exception(
@@ -124,12 +126,13 @@ class ImgurDataSource {
     if (userBloc.state is UserLoadedState) {
       try {
         final response = await http.get(
-            Uri.parse(
-              Constants.searchImagesURL(
-                tag,
-              ),
+          Uri.parse(
+            Constants.searchImagesURL(
+              tag,
             ),
-            headers: {'Authorization': 'Client-ID ${Constants.clientId}'});
+          ),
+          headers: {'Authorization': 'Client-ID ${Constants.clientId}'},
+        );
 
         if (response.statusCode != 200) {
           throw Exception(
@@ -237,6 +240,173 @@ class ImgurDataSource {
           throw Exception(
               'Error from API call GET gallery/search/top/all  Error code: ${response.statusCode}');
         }
+        return true;
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return false;
+  }
+
+  //TODO: CHECK WHY NOT WORKING ON CERTAIN PICTURES
+  static Future<List<ImgurComments>?> getImageComments(
+    BuildContext context,
+    String id,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      try {
+        final response = await http.get(
+          Uri.parse(Constants.getImageCommentsURL(id)),
+          headers: {'Authorization': 'Client-ID ${Constants.clientId}'},
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call GET gallery/galleryHash/comments  Error code: ${response.statusCode}');
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse?['data'];
+
+        if (jsonData == null) return null;
+
+        final finalList = List<ImgurComments>.from(
+          jsonData.map<ImgurComments>(
+            (model) => ImgurComments.fromMap(model),
+          ),
+        );
+
+        return finalList;
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return null;
+  }
+
+  static Future<ImgurComments?> createCommentOnImage(
+    BuildContext context,
+    String id,
+    String comment,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        final response = await http.post(
+          Uri.parse(Constants.createCommentURL),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+          body: {
+            'image_id': id,
+            'comment': comment,
+          },
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call POST image/comments  Error code: ${response.statusCode}');
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse?['data'];
+
+        if (jsonData == null) return null;
+
+        if (jsonData is Map<String, dynamic>) {
+          return await convertIdToComment(
+              context, jsonData.values.first.toString());
+        } else {
+          return null;
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return null;
+  }
+
+  static Future<ImgurComments?> convertIdToComment(
+    BuildContext context,
+    String commentId,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        final response = await http.get(
+          Uri.parse(Constants.commentChangeURL(commentId)),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call GET comment informations  Error code: ${response.statusCode}');
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse?['data'];
+
+        if (jsonData == null) return null;
+
+        return ImgurComments.fromMap(jsonData);
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return null;
+  }
+
+  static Future<bool> voteOnComment(
+    BuildContext context,
+    String commentId,
+    String vote,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        final response = await http.post(
+          Uri.parse(Constants.voteOnCommentURL(commentId, vote)),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call POST image/comments  Error code: ${response.statusCode}');
+        }
+
+        return true;
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return false;
+  }
+
+  static Future<bool> deleteComment(
+    BuildContext context,
+    String commentId,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        final response = await http.delete(
+          Uri.parse(Constants.commentChangeURL(commentId)),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call GET comment informations  Error code: ${response.statusCode}');
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse?['data'];
+
+        if (jsonData == null) return false;
+
         return true;
       } catch (e) {
         log(e.toString());
