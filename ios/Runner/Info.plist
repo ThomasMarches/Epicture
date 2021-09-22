@@ -31,6 +31,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Can I use the camera please?</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Can I use the gallery please?</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Can I use the mic please?</string>
 	<key>UILaunchStoryboardName</key>
