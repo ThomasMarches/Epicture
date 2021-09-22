@@ -52,9 +52,7 @@ class _ImagePageState extends State<ImagePage> {
   void initState() {
     print(widget.image.link);
     super.initState();
-    ImgurDataSource.getImageComments(
-            context, widget.image.id)
-        .then(
+    ImgurDataSource.getImageComments(context, widget.image.id).then(
       (value) => setState(
         () {
           imageCommentsList = value;
