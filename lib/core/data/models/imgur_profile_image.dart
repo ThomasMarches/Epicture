@@ -32,7 +32,8 @@ class ImgurProfileImage {
       id: map['id'] as String,
       title: map['title'] as String?,
       description: map['description'] as String?,
-      datetime: DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
+      datetime:
+          DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
       type: map['type'] as String,
       animated: map['animated'] as bool,
       width: map['width'] as int,

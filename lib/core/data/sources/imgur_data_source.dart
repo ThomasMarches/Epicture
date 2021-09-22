@@ -249,7 +249,6 @@ class ImgurDataSource {
     return false;
   }
 
-  //TODO: CHECK WHY NOT WORKING ON CERTAIN PICTURES
   static Future<List<ImgurComments>?> getImageComments(
     BuildContext context,
     String id,
