@@ -50,9 +50,10 @@ class _ImagePageState extends State<ImagePage> {
 
   @override
   void initState() {
+    print(widget.image.link);
     super.initState();
     ImgurDataSource.getImageComments(
-            context, _getPictureHash(widget.image.link))
+            context, widget.image.id)
         .then(
       (value) => setState(
         () {

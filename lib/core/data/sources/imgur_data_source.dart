@@ -11,6 +11,7 @@ import 'package:epicture/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class ImgurDataSource {
   static Future<UserInformations?> getUserInformations(
@@ -117,7 +118,7 @@ class ImgurDataSource {
     return null;
   }
 
-  static Future<List<ImgurImages>?> getUserAssociatedImages(
+  static Future<List<ImgurImages>?> searchForImages(
     BuildContext context,
     String? tag,
   ) async {
@@ -255,29 +256,34 @@ class ImgurDataSource {
   ) async {
     final userBloc = BlocProvider.of<UserBloc>(context);
     if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
       try {
-        final response = await http.get(
-          Uri.parse(Constants.getImageCommentsURL(id)),
-          headers: {'Authorization': 'Client-ID ${Constants.clientId}'},
-        );
+        var headers = {'Authorization': 'Client-ID ${Constants.clientId}'};
+        var request = http.MultipartRequest(
+            'GET', Uri.parse('https://api.imgur.com/3/gallery/$id/comments/'));
+        request.fields.addAll({
+          'access_token': state.user.accessToken,
+        });
 
-        if (response.statusCode != 200) {
-          throw Exception(
-              'Error from API call GET gallery/galleryHash/comments  Error code: ${response.statusCode}');
+        request.headers.addAll(headers);
+
+        http.StreamedResponse streamedResponse = await request.send();
+
+        if (streamedResponse.statusCode == 200) {
+          final response = await Response.fromStream(streamedResponse);
+          final jsonResponse = jsonDecode(response.body);
+          final jsonData = jsonResponse?['data'];
+          if (jsonData == null) return null;
+
+          final finalList = List<ImgurComments>.from(
+            jsonData.map<ImgurComments>(
+              (model) => ImgurComments.fromMap(model),
+            ),
+          );
+          return finalList;
+        } else {
+          return null;
         }
-
-        final jsonResponse = jsonDecode(response.body);
-        final jsonData = jsonResponse?['data'];
-
-        if (jsonData == null) return null;
-
-        final finalList = List<ImgurComments>.from(
-          jsonData.map<ImgurComments>(
-            (model) => ImgurComments.fromMap(model),
-          ),
-        );
-
-        return finalList;
       } catch (e) {
         log(e.toString());
       }
@@ -311,6 +317,7 @@ class ImgurDataSource {
         final jsonResponse = jsonDecode(response.body);
         final jsonData = jsonResponse?['data'];
 
+        print(jsonData);
         if (jsonData == null) return null;
 
         if (jsonData is Map<String, dynamic>) {

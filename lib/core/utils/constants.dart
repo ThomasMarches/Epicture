@@ -23,7 +23,8 @@ class Constants {
     EpictureColors.coral,
   ];
 
-  static const clientId = '8e9c6eeae958099';
+  static const clientId = 'eb62c046c1f70e7';
+
   static const baseUrl = 'https://api.imgur.com/3';
 
   static const getUserInformationsURL = '$baseUrl/account/';
@@ -70,5 +71,5 @@ class Constants {
   }
 
   static const loginURL =
-      'https://api.imgur.com/oauth2/authorize?client_id=8e9c6eeae958099&response_type=token';
+      'https://api.imgur.com/oauth2/authorize?client_id=${Constants.clientId}&response_type=token';
 }
