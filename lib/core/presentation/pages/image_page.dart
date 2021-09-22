@@ -29,7 +29,7 @@ class ImagePageArguments {
   final bool favorite;
   final String? title;
   final String? description;
-  final int datetime;
+  final DateTime datetime;
   final String? section;
   final String link;
 }
@@ -166,6 +166,11 @@ class _ImagePageState extends State<ImagePage> {
                       ),
                     )
                   ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                      'Uploaded: ${Utils.getTimeDifference(widget.image.datetime)}'),
                 ),
                 Column(
                   children: [
@@ -304,12 +309,19 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             ),
           ),
           const Spacer(),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              isAuthor == true
+                  ? 'Written by: You'
+                  : 'Written by: ${widget.imageCommentsList?[widget.index].author}',
+              style: const TextStyle(color: Colors.black, fontSize: 10),
+            ),
+          ),
           Row(
             children: [
               Text(
-                isAuthor == true
-                    ? 'Written by: You'
-                    : 'Written by: ${widget.imageCommentsList?[widget.index].author}',
+                'Uploaded: ${Utils.getTimeDifference(widget.imageCommentsList![widget.index].datetime)}',
                 style: const TextStyle(color: Colors.black, fontSize: 10),
               ),
               const Spacer(),

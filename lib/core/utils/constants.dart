@@ -50,14 +50,14 @@ class Constants {
   }
 
   static const getHomePageImages =
-      'https://api.imgur.com/3/gallery/hot/viral/top/1?showViral=true&mature=false&album_previews=false';
+      '$baseUrl/gallery/hot/viral/top/1?showViral=true&mature=false&album_previews=false';
 
   static String getUserFavoriteImagesURL(String username) {
     return '$baseUrl/account/$username/favorites/';
   }
 
   static String getImageCommentsURL(String imageID) {
-    return 'https://api.imgur.com/3/gallery/$imageID/comments';
+    return '$baseUrl/gallery/$imageID/comments';
   }
 
   static String searchImagesURL(String? tag) {

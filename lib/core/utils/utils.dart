@@ -1,5 +1,6 @@
 import 'package:epicture/core/presentation/pages/image_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
   static void moveToImagePage(
@@ -11,7 +12,7 @@ class Utils {
     bool favorite,
     String? title,
     String? description,
-    int datetime,
+    DateTime datetime,
     String? section,
     String link,
     BuildContext context,
@@ -59,5 +60,21 @@ class Utils {
         );
       },
     );
+  }
+
+  static String getTimeDifference(DateTime date) {
+    final difference = DateTime.now().difference(date);
+    var timeDifferenceString = '';
+
+    if (difference.inMinutes < 60) {
+      timeDifferenceString = '${difference.inMinutes.toString()} minutes ago';
+    } else if (difference.inHours < 24) {
+      timeDifferenceString = '${difference.inHours.toString()} hours ago';
+    } else if (difference.inDays < 30) {
+      timeDifferenceString = '${difference.inDays.toString()} days ago';
+    } else {
+      timeDifferenceString = DateFormat.yMMMEd().format(date);
+    }
+    return timeDifferenceString;
   }
 }

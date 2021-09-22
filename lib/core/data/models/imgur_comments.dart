@@ -18,7 +18,7 @@ class ImgurComments {
       downs: map['downs'] as int,
       vote: map['vote'] as String?,
       author: map['author'] as String,
-      datetime: map['datetime'] as int,
+      datetime: DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
       // children: map['children'] as List<ImgurComments>?,
     );
   }
@@ -29,6 +29,6 @@ class ImgurComments {
   final String? vote;
   final String author;
   final String comment;
-  final int datetime;
+  final DateTime datetime;
   // final List<ImgurComments>? children;
 }

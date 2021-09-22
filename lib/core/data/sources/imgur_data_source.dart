@@ -317,7 +317,6 @@ class ImgurDataSource {
         final jsonResponse = jsonDecode(response.body);
         final jsonData = jsonResponse?['data'];
 
-        print(jsonData);
         if (jsonData == null) return null;
 
         if (jsonData is Map<String, dynamic>) {

@@ -23,7 +23,7 @@ class ImgurImages {
       favorite: map['favorite'] as bool,
       type: map['type'].toString().substring(6),
       description: map['description'] as String?,
-      datetime: map['datetime'] as int,
+      datetime: DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
       section: map['section'] as String?,
       link: map['link'] as String,
     );
@@ -37,7 +37,7 @@ class ImgurImages {
   final bool favorite;
   final String? title;
   final String? description;
-  final int datetime;
+  final DateTime datetime;
   final String? section;
   final String link;
 }

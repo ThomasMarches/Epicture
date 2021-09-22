@@ -1,5 +1,6 @@
 import 'package:epicture/core/data/models/imgur_profile_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class UserInformations {
@@ -155,13 +156,31 @@ class _ProfileBodyState extends State<ProfileBody> {
                   mainAxisSpacing: 20),
               itemCount: userImagesList == null ? 0 : userImagesList!.length,
               itemBuilder: (BuildContext ctx, index) {
-                return Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: Image.network(userImagesList![index].link).image,
-                    fit: BoxFit.fill,
-                  )),
+                return InkWell(
+                  onTap: () {
+                    Utils.moveToImagePage(
+                      userImagesList![index].id,
+                      userImagesList![index].type,
+                      userImagesList![index].width,
+                      userImagesList![index].height,
+                      userImagesList![index].vote,
+                      userImagesList![index].favorite,
+                      userImagesList![index].title,
+                      userImagesList![index].description,
+                      userImagesList![index].datetime,
+                      userImagesList![index].section,
+                      userImagesList![index].link,
+                      context,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                      image: Image.network(userImagesList![index].link).image,
+                      fit: BoxFit.fill,
+                    )),
+                  ),
                 );
               },
             ),
