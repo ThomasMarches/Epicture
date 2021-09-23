@@ -94,64 +94,64 @@ class _ImagePreviewState extends State<ImagePreview> {
   Widget build(BuildContext context) {
     return Flexible(
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.file(
-              widget.previewImage!,
-              width: 300,
-              height: 300,
-              fit: BoxFit.fill,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                IconButton(
-                  onPressed: () async {},
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.grey,
-                    size: 40,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  onPressed: () async {},
-                  icon: const Icon(
-                    Icons.upload,
-                    color: Colors.grey,
-                    size: 40,
-                  ),
-                ),
-                const Spacer(),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onSubmitted: (String input) {
-                  imageTitle = input;
-                },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Image title',
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.file(
+            widget.previewImage!,
+            width: 300,
+            height: 300,
+            fit: BoxFit.fill,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              IconButton(
+                onPressed: () async {},
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.grey,
+                  size: 40,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onSubmitted: (String input) {
-                  imageDescription = input;
-                },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Image description',
+              const Spacer(),
+              IconButton(
+                onPressed: () async {},
+                icon: const Icon(
+                  Icons.upload,
+                  color: Colors.grey,
+                  size: 40,
                 ),
               ),
+              const Spacer(),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onSubmitted: (String input) {
+                imageTitle = input;
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Image title',
+              ),
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onSubmitted: (String input) {
+                imageDescription = input;
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Image description',
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
