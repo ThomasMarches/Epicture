@@ -432,7 +432,9 @@ class ImgurDataSource {
             'image': base64Encode(await image.readAsBytes()),
             'type': 'base64',
             'title': (imageTitle == null) ? 'Image title' : imageTitle,
-            'description': (imageDescription == null) ? 'Image description' : imageDescription,
+            'description': (imageDescription == null)
+                ? 'Image description'
+                : imageDescription,
           },
         );
 
@@ -443,8 +445,6 @@ class ImgurDataSource {
 
         final jsonResponse = jsonDecode(response.body);
         final jsonData = jsonResponse?['data'];
-
-        print(jsonData);
 
         if (jsonData == null) return false;
 

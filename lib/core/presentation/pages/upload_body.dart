@@ -118,7 +118,8 @@ class _ImagePreviewState extends State<ImagePreview> {
               const Spacer(),
               IconButton(
                 onPressed: () async {
-                  ImgurDataSource.uploadImage(context, imageTitle, imageDescription, widget.previewImage);
+                  ImgurDataSource.uploadImage(context, imageTitle,
+                      imageDescription, widget.previewImage);
                 },
                 icon: const Icon(
                   Icons.upload,
