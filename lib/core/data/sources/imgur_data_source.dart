@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:epicture/core/data/models/imgur_comments.dart';
 import 'package:epicture/core/data/models/imgur_favorite_image.dart';
@@ -30,7 +31,7 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET /account/username/  Error code: ${response.statusCode}');
+              'Error from API call GET ${Constants.getUserInformationsURL + state.user.accountUsername}.  Error code: ${response.statusCode}');
         }
 
         final jsonResponse = jsonDecode(response.body);
@@ -55,7 +56,7 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET /account/me/images  Error code: ${response.statusCode}');
+              'Error from API call GET ${Constants.getUserImagesURL}.  Error code: ${response.statusCode}');
         }
 
         final jsonResponse = jsonDecode(response.body);
@@ -87,16 +88,13 @@ class ImgurDataSource {
       try {
         final response = await http.get(
           Uri.parse(
-            Constants.getUserFavoriteImagesURL(
-              state.user.accountUsername,
-            ),
-          ),
+              Constants.getUserFavoriteImagesURL(state.user.accountUsername)),
           headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
         );
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET /account/username/favorites  Error code: ${response.statusCode}');
+              'Error from API call GET ${Constants.getUserFavoriteImagesURL(state.user.accountUsername)}. Error code: ${response.statusCode}');
         }
 
         final jsonResponse = jsonDecode(response.body);
@@ -127,17 +125,13 @@ class ImgurDataSource {
     if (userBloc.state is UserLoadedState) {
       try {
         final response = await http.get(
-          Uri.parse(
-            Constants.searchImagesURL(
-              tag,
-            ),
-          ),
+          Uri.parse(Constants.searchImagesURL(tag)),
           headers: {'Authorization': 'Client-ID ${Constants.clientId}'},
         );
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET /gallery/search  Error code: ${response.statusCode}');
+              'Error from API call GET ${Constants.searchImagesURL(tag)}.  Error code: ${response.statusCode}');
         }
 
         final jsonResponse = jsonDecode(response.body);
@@ -189,7 +183,7 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET gallery/search/top/all  Error code: ${response.statusCode}');
+              'Error from API call GET ${Constants.getHomePageImages}.  Error code: ${response.statusCode}');
         }
         final jsonResponse = jsonDecode(response.body);
         final jsonData = jsonResponse?['data'];
@@ -239,7 +233,7 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET gallery/search/top/all  Error code: ${response.statusCode}');
+              'Error from API call GET ${Constants.getFavoriteAnImageURL(hash)}.  Error code: ${response.statusCode}');
         }
         return true;
       } catch (e) {
@@ -259,7 +253,7 @@ class ImgurDataSource {
       try {
         var headers = {'Authorization': 'Client-ID ${Constants.clientId}'};
         var request = http.MultipartRequest(
-            'GET', Uri.parse('https://api.imgur.com/3/gallery/$id/comments/'));
+            'GET', Uri.parse(Constants.getImageCommentsURL(id)));
         request.fields.addAll({
           'access_token': state.user.accessToken,
         });
@@ -281,7 +275,8 @@ class ImgurDataSource {
           );
           return finalList;
         } else {
-          return null;
+          throw Exception(
+              'Error from API call POST ${Constants.getImageCommentsURL(id)}.  Error code: ${streamedResponse.statusCode}');
         }
       } catch (e) {
         log(e.toString());
@@ -310,7 +305,7 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call POST image/comments  Error code: ${response.statusCode}');
+              'Error from API call POST ${Constants.createCommentURL}.  Error code: ${response.statusCode}');
         }
 
         final jsonResponse = jsonDecode(response.body);
@@ -346,7 +341,7 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET comment informations  Error code: ${response.statusCode}');
+              'Error from API call GET ${Constants.commentChangeURL(commentId)}. Error code: ${response.statusCode}');
         }
 
         final jsonResponse = jsonDecode(response.body);
@@ -378,7 +373,7 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call POST image/comments  Error code: ${response.statusCode}');
+              'Error from API call POST ${Constants.voteOnCommentURL(commentId, vote)}. Error code: ${response.statusCode}');
         }
 
         return true;
@@ -404,11 +399,52 @@ class ImgurDataSource {
 
         if (response.statusCode != 200) {
           throw Exception(
-              'Error from API call GET comment informations  Error code: ${response.statusCode}');
+              'Error from API call DELETE ${Constants.commentChangeURL(commentId)}. Error code: ${response.statusCode}');
         }
 
         final jsonResponse = jsonDecode(response.body);
         final jsonData = jsonResponse?['data'];
+
+        if (jsonData == null) return false;
+
+        return true;
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return false;
+  }
+
+  static Future<bool> uploadImage(
+    BuildContext context,
+    String? imageTitle,
+    String? imageDescription,
+    File image,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        final response = await http.post(
+          Uri.parse(Constants.uploadImageURL),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+          body: {
+            'image': base64Encode(await image.readAsBytes()),
+            'type': 'base64',
+            'title': (imageTitle == null) ? 'Image title' : imageTitle,
+            'description': (imageDescription == null) ? 'Image description' : imageDescription,
+          },
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call POST ${Constants.uploadImageURL}. Error code: ${response.statusCode}');
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse?['data'];
+
+        print(jsonData);
 
         if (jsonData == null) return false;
 

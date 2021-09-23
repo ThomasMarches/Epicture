@@ -29,6 +29,8 @@ class Constants {
 
   static const getUserInformationsURL = '$baseUrl/account/';
 
+  static const uploadImageURL = '$baseUrl/upload/';
+
   static const getUserImagesURL = '$baseUrl/account/me/images';
 
   static const generateAccessTokenURL = 'https://api.imgur.com/oauth2/token';
@@ -57,7 +59,7 @@ class Constants {
   }
 
   static String getImageCommentsURL(String imageID) {
-    return '$baseUrl/gallery/$imageID/comments';
+    return '$baseUrl/gallery/$imageID/comments/';
   }
 
   static String searchImagesURL(String? tag) {

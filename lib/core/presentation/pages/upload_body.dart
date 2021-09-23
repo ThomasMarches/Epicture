@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -70,7 +71,7 @@ class _UploadBodyState extends State<UploadBody> {
               ],
             ),
           )
-        : ImagePreview(previewImage: previewImage);
+        : ImagePreview(previewImage: previewImage!);
   }
 }
 
@@ -80,7 +81,7 @@ class ImagePreview extends StatefulWidget {
     required this.previewImage,
   }) : super(key: key);
 
-  final File? previewImage;
+  final File previewImage;
 
   @override
   State<ImagePreview> createState() => _ImagePreviewState();
@@ -97,7 +98,7 @@ class _ImagePreviewState extends State<ImagePreview> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.file(
-            widget.previewImage!,
+            widget.previewImage,
             width: 300,
             height: 300,
             fit: BoxFit.fill,
@@ -116,7 +117,9 @@ class _ImagePreviewState extends State<ImagePreview> {
               ),
               const Spacer(),
               IconButton(
-                onPressed: () async {},
+                onPressed: () async {
+                  ImgurDataSource.uploadImage(context, imageTitle, imageDescription, widget.previewImage);
+                },
                 icon: const Icon(
                   Icons.upload,
                   color: Colors.grey,
