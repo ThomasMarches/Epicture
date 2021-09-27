@@ -20,7 +20,7 @@ class _UploadBodyState extends State<UploadBody> {
 
   @override
   Widget build(BuildContext context) {
-    return previewImage == null
+    return (previewImage == null)
         ? Center(
             child: Column(
               children: [
@@ -74,7 +74,16 @@ class _UploadBodyState extends State<UploadBody> {
               ],
             ),
           )
-        : ImagePreview(previewImage: previewImage!);
+        : ImagePreview(
+            previewImage: previewImage!,
+            removeImageCallback: _removeImageFromBody,
+          );
+  }
+
+  void _removeImageFromBody() {
+    setState(() {
+      previewImage = null;
+    });
   }
 }
 
@@ -82,9 +91,11 @@ class ImagePreview extends StatefulWidget {
   const ImagePreview({
     Key? key,
     required this.previewImage,
+    required this.removeImageCallback,
   }) : super(key: key);
 
   final File previewImage;
+  final void Function() removeImageCallback;
 
   @override
   State<ImagePreview> createState() => _ImagePreviewState();
@@ -111,7 +122,9 @@ class _ImagePreviewState extends State<ImagePreview> {
             children: [
               const Spacer(),
               IconButton(
-                onPressed: () async {},
+                onPressed: () async {
+                  widget.removeImageCallback();
+                },
                 icon: const Icon(
                   Icons.delete,
                   color: Colors.grey,

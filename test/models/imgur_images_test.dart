@@ -7,8 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Imgur Images tests', () {
     test('FromMap method test', () {
-      final file =
-          File('test/ressources/imgur_images.json').readAsStringSync();
+      final file = File('test/ressources/imgur_images.json').readAsStringSync();
 
       final comment =
           ImgurImages.fromMap(jsonDecode(file) as Map<String, dynamic>);
