@@ -53,7 +53,7 @@ class ImgurProfileImage {
       edited: map['edited'] as String,
       inGallery: map['in_gallery'] as bool,
       deletehash: map['deletehash'] as String,
-      name: map['name'] as String,
+      name: map['name'] as String?,
       link: map['link'] as String,
     );
   }
@@ -81,6 +81,6 @@ class ImgurProfileImage {
   final String edited;
   final bool inGallery;
   final String deletehash;
-  final String name;
+  final String? name;
   final String link;
 }

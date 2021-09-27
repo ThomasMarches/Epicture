@@ -45,36 +45,32 @@ class ImgurDataSource {
   }
 
   static Future<List<ImgurProfileImage>?> getUserImages(
-    BuildContext context,
+    String accessToken,
   ) async {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      try {
-        final response = await http.get(Uri.parse(Constants.getUserImagesURL),
-            headers: {'Authorization': 'Bearer ${state.user.accessToken}'});
+    try {
+      final response = await http.get(Uri.parse(Constants.getUserImagesURL),
+          headers: {'Authorization': 'Bearer $accessToken'});
 
-        if (response.statusCode != 200) {
-          throw Exception(
-              'Error from API call GET ${Constants.getUserImagesURL}.  Error code: ${response.statusCode}');
-        }
-
-        final jsonResponse = jsonDecode(response.body);
-        final jsonData = jsonResponse?['data'];
-
-        if (jsonData != null) {
-          final finalList = List<ImgurProfileImage>.from(
-            jsonData.map(
-              (model) => ImgurProfileImage.fromMap(model),
-            ),
-          );
-          return finalList;
-        }
-
-        return null;
-      } catch (e) {
-        log(e.toString());
+      if (response.statusCode != 200) {
+        throw Exception(
+            'Error from API call GET ${Constants.getUserImagesURL}.  Error code: ${response.statusCode}');
       }
+
+      final jsonResponse = jsonDecode(response.body);
+      final jsonData = jsonResponse?['data'];
+
+      if (jsonData != null) {
+        final finalList = List<ImgurProfileImage>.from(
+          jsonData.map(
+            (model) => ImgurProfileImage.fromMap(model),
+          ),
+        );
+        return finalList;
+      }
+
+      return null;
+    } catch (e) {
+      log(e.toString());
     }
     return null;
   }

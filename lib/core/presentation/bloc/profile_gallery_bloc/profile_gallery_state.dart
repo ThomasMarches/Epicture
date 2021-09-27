@@ -7,4 +7,16 @@ abstract class ProfileGalleryBlocState extends Equatable {
   List<Object> get props => [];
 }
 
-class ProfileGalleryBlocInitial extends ProfileGalleryBlocState {}
+class ProfileGalleryBlocInitialState extends ProfileGalleryBlocState {}
+
+class FetchProfileGalleryPictureLoading extends ProfileGalleryBlocState {}
+
+class FetchProfileGalleryPictureFailure extends ProfileGalleryBlocState {}
+
+class FetchProfileGalleryPictureSuccess extends ProfileGalleryBlocState {
+  const FetchProfileGalleryPictureSuccess({
+    this.userImagesList,
+  });
+
+  final List<ImgurProfileImage>? userImagesList;
+}

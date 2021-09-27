@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
+import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UploadBody extends StatefulWidget {
@@ -119,7 +122,19 @@ class _ImagePreviewState extends State<ImagePreview> {
               IconButton(
                 onPressed: () async {
                   ImgurDataSource.uploadImage(context, imageTitle,
-                      imageDescription, widget.previewImage);
+                          imageDescription, widget.previewImage)
+                      .then((value) {
+                    if (value == true) {
+                      final userBloc = BlocProvider.of<UserBloc>(context);
+                      if (userBloc.state is UserLoadedState) {
+                        final state = userBloc.state as UserLoadedState;
+                        BlocProvider.of<ProfileGalleryBloc>(context).add(
+                          FetchProfileGalleryPictureEvent(
+                              accessToken: state.user.accessToken),
+                        );
+                      }
+                    }
+                  });
                 },
                 icon: const Icon(
                   Icons.upload,

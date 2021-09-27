@@ -1,7 +1,10 @@
 import 'package:epicture/core/data/models/imgur_profile_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
+import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserInformations {
   const UserInformations({
@@ -47,13 +50,17 @@ class _ProfileBodyState extends State<ProfileBody> {
   @override
   void initState() {
     super.initState();
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      BlocProvider.of<ProfileGalleryBloc>(context).add(
+        FetchProfileGalleryPictureEvent(accessToken: state.user.accessToken),
+      );
+    }
     ImgurDataSource.getUserInformations(context)
         .then((userInfos) => setState(() {
               userInformations = userInfos;
             }));
-    ImgurDataSource.getUserImages(context).then((userImages) => setState(() {
-          userImagesList = userImages;
-        }));
   }
 
   @override
@@ -147,43 +154,63 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
           ),
           const SizedBox(height: 10),
-          Flexible(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20),
-              itemCount: userImagesList == null ? 0 : userImagesList!.length,
-              itemBuilder: (BuildContext ctx, index) {
-                return InkWell(
-                  onTap: () {
-                    Utils.moveToImagePage(
-                      userImagesList![index].id,
-                      userImagesList![index].type,
-                      userImagesList![index].width,
-                      userImagesList![index].height,
-                      userImagesList![index].vote,
-                      userImagesList![index].favorite,
-                      userImagesList![index].title,
-                      userImagesList![index].description,
-                      userImagesList![index].datetime,
-                      userImagesList![index].section,
-                      userImagesList![index].link,
-                      context,
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: Image.network(userImagesList![index].link).image,
-                      fit: BoxFit.fill,
-                    )),
+          BlocConsumer<ProfileGalleryBloc, ProfileGalleryBlocState>(
+            listener: (context, state) {
+              if (state is FetchProfileGalleryPictureSuccess) {
+                setState(() {
+                  userImagesList = state.userImagesList;
+                });
+              }
+            },
+            builder: (context, state) {
+              if (state is FetchProfileGalleryPictureSuccess) {
+                return Flexible(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount:
+                        userImagesList == null ? 0 : userImagesList!.length,
+                    itemBuilder: (BuildContext ctx, index) {
+                      return InkWell(
+                        onTap: () {
+                          Utils.moveToImagePage(
+                            userImagesList![index].id,
+                            userImagesList![index].type,
+                            userImagesList![index].width,
+                            userImagesList![index].height,
+                            userImagesList![index].vote,
+                            userImagesList![index].favorite,
+                            userImagesList![index].title,
+                            userImagesList![index].description,
+                            userImagesList![index].datetime,
+                            userImagesList![index].section,
+                            userImagesList![index].link,
+                            context,
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                            image: Image.network(userImagesList![index].link)
+                                .image,
+                            fit: BoxFit.fill,
+                          )),
+                        ),
+                      );
+                    },
                   ),
                 );
-              },
-            ),
+              } else if (state is FetchProfileGalleryPictureLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return const Text('Couldn\'t load your profile pictures');
+              }
+            },
           ),
         ],
       ),
