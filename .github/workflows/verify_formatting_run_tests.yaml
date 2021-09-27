@@ -1,4 +1,4 @@
-name: Verify formatting and run tests with coverage
+name: Verify formatting, linter and run tests with coverage check
 
 on: [pull_request, push]
 
