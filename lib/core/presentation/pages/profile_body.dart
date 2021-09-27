@@ -1,36 +1,11 @@
 import 'package:epicture/core/data/models/imgur_profile_image.dart';
+import 'package:epicture/core/data/models/user_informations.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class UserInformations {
-  const UserInformations({
-    required this.userName,
-    required this.reputation,
-    required this.bio,
-    required this.reputationName,
-    required this.avatar,
-  });
-
-  factory UserInformations.fromMap(Map<String, dynamic> map) {
-    return UserInformations(
-      userName: map['url'] as String,
-      reputation: map['reputation'] as int,
-      bio: map['bio'] as String?,
-      reputationName: map['reputation_name'] as String,
-      avatar: map['avatar'] as String?,
-    );
-  }
-
-  final String userName;
-  final int reputation;
-  final String? bio;
-  final String reputationName;
-  final String? avatar;
-}
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody({
