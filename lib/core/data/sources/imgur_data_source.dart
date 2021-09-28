@@ -451,4 +451,41 @@ class ImgurDataSource {
     }
     return false;
   }
+
+  static Future<bool> updateUserInformations(
+    BuildContext context,
+    UserInformations? userInformations,
+  ) async {
+    if (userInformations == null) return false;
+
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        final response = await http.put(
+          Uri.parse(
+              Constants.changeAccountSettingsURL(state.user.accountUsername)),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+          body: {
+            'username': userInformations.userName,
+            'bio': userInformations.bio
+          },
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call POST ${Constants.changeAccountSettingsURL(state.user.accountUsername)}. Error code: ${response.statusCode}');
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse?['data'];
+
+        if (jsonData == null) return false;
+        return true;
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return false;
+  }
 }

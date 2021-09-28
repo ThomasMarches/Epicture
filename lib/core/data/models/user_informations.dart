@@ -1,5 +1,5 @@
 class UserInformations {
-  const UserInformations({
+  UserInformations({
     required this.userName,
     required this.reputation,
     required this.bio,
@@ -17,9 +17,9 @@ class UserInformations {
     );
   }
 
-  final String userName;
+  String userName;
   final int reputation;
-  final String? bio;
+  String? bio;
   final String reputationName;
   final String? avatar;
 }

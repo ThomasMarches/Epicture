@@ -34,7 +34,9 @@ class Utils {
   }
 
   static void showAlertDialog(
-      BuildContext context, void Function() onConfirmCallback) {
+    BuildContext context,
+    void Function() onConfirmCallback,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -76,5 +78,20 @@ class Utils {
       timeDifferenceString = DateFormat.yMMMEd().format(date);
     }
     return timeDifferenceString;
+  }
+
+  static void showSnackbar(
+    BuildContext context,
+    String message,
+    Color color,
+    Duration duration,
+  ) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: duration,
+        backgroundColor: color,
+        content: Text(message),
+      ),
+    );
   }
 }

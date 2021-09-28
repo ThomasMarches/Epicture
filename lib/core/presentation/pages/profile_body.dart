@@ -21,6 +21,9 @@ class ProfileBody extends StatefulWidget {
 class _ProfileBodyState extends State<ProfileBody> {
   UserInformations? userInformations;
   List<ImgurProfileImage>? userImagesList;
+  var isEditing = false;
+  String? newUsername;
+  String? newDescription;
 
   @override
   void initState() {
@@ -76,10 +79,26 @@ class _ProfileBodyState extends State<ProfileBody> {
                       const Spacer(),
                       Column(
                         children: [
-                          Text(
-                            _getUsername(),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                          (isEditing == true)
+                              ? SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  child: TextField(
+                                    style: const TextStyle(fontSize: 10),
+                                    onChanged: (String value) {
+                                      newUsername = value;
+                                    },
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'New username',
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  _getUsername(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
@@ -97,6 +116,19 @@ class _ProfileBodyState extends State<ProfileBody> {
                         ],
                       ),
                       const Spacer(),
+                      IconButton(
+                        onPressed: () async {
+                          await changeUsernameSettings(context);
+                          setState(() {
+                            isEditing = !isEditing;
+                          });
+                        },
+                        icon: Icon(
+                          isEditing == true ? Icons.check_box : Icons.edit,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const Spacer(),
                     ],
                   ),
                   const Divider(
@@ -112,12 +144,28 @@ class _ProfileBodyState extends State<ProfileBody> {
                           right: 20,
                           top: 10,
                         ),
-                        child: Text(
-                          _getBiography(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
+                        child: (isEditing == true)
+                            ? SizedBox(
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                child: TextField(
+                                  style: const TextStyle(fontSize: 10),
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
+                                  onChanged: (String value) {
+                                    newDescription = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'New description',
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                _getBiography(),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -190,6 +238,31 @@ class _ProfileBodyState extends State<ProfileBody> {
         ],
       ),
     );
+  }
+
+  Future<void> changeUsernameSettings(BuildContext context) async {
+    if (isEditing == true) {
+      if (newUsername != userInformations?.userName &&
+          newDescription != userInformations?.bio) {
+        if (newUsername != null) {
+          userInformations?.userName = newUsername!;
+        }
+        if (newDescription != null) {
+          userInformations?.bio = newDescription;
+        }
+        await ImgurDataSource.updateUserInformations(
+            context, userInformations);
+        newUsername = null;
+        newDescription = null;
+      } else {
+        Utils.showSnackbar(
+          context,
+          'You can\'t put the same username/description',
+          Colors.red,
+          const Duration(seconds: 2),
+        );
+      }
+    }
   }
 
   String _getUsername() {
