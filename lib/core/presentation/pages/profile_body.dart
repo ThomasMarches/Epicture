@@ -250,8 +250,7 @@ class _ProfileBodyState extends State<ProfileBody> {
         if (newDescription != null) {
           userInformations?.bio = newDescription;
         }
-        await ImgurDataSource.updateUserInformations(
-            context, userInformations);
+        await ImgurDataSource.updateUserInformations(context, userInformations);
         newUsername = null;
         newDescription = null;
       } else {
