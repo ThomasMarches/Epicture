@@ -1,5 +1,6 @@
 import 'package:epicture/core/data/models/imgur_comments.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/constants.dart';
 import 'package:epicture/core/utils/utils.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ImagePageArguments {
   const ImagePageArguments({
     required this.id,
+    required this.author,
     required this.title,
     required this.vote,
     required this.width,
@@ -22,6 +24,7 @@ class ImagePageArguments {
   });
 
   final String id;
+  final String? author;
   final String type;
   final int width;
   final int height;
@@ -47,10 +50,12 @@ class ImagePage extends StatefulWidget {
 class _ImagePageState extends State<ImagePage> {
   List<ImgurComments>? imageCommentsList;
   final _controller = TextEditingController();
+  var isFavorite = false;
 
   @override
   void initState() {
     super.initState();
+    isFavorite = widget.image.favorite;
     ImgurDataSource.getImageComments(context, widget.image.id).then(
       (value) => setState(
         () {
@@ -64,6 +69,54 @@ class _ImagePageState extends State<ImagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          if (widget.image.author != null &&
+              widget.image.author == _getUserUsername(context))
+            IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 15),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: const Icon(Icons.delete),
+                              title: const Text('Delete picture'),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.edit),
+                              title: const Text('Edit title'),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.edit),
+                              title: const Text('Edit description'),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              },
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.black,
+              ),
+            ),
+        ],
         elevation: 5,
         leading: IconButton(
           color: Colors.black,
@@ -122,20 +175,11 @@ class _ImagePageState extends State<ImagePage> {
                   child: Row(children: [
                     IconButton(
                       onPressed: () {},
-                      icon: Icon(
-                        Icons.comment,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const Spacer(flex: 3),
-                    IconButton(
-                      onPressed: () {},
                       icon: const Icon(
                         Icons.arrow_upward_sharp,
                         color: Colors.grey,
                       ),
                     ),
-                    const Spacer(),
                     Text(
                       widget.image.vote == null ? '' : widget.image.vote!,
                     ),
@@ -155,13 +199,25 @@ class _ImagePageState extends State<ImagePage> {
                           _getPictureHash(
                             widget.image.link,
                           ),
-                        );
+                        ).then((value) {
+                          if (value == true) {
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                            _notifyFavoriteGalleryBloc(context);
+                          } else {
+                            Utils.showSnackbar(
+                              context,
+                              'Couldn\'t perform request',
+                              Colors.red,
+                              const Duration(seconds: 2),
+                            );
+                          }
+                        });
                       },
                       icon: Icon(
-                        widget.image.favorite
-                            ? Icons.favorite
-                            : Icons.favorite_outline,
-                        color: widget.image.favorite ? Colors.red : Colors.grey,
+                        isFavorite ? Icons.favorite : Icons.favorite_outline,
+                        color: isFavorite ? Colors.red : Colors.grey,
                       ),
                     )
                   ]),
@@ -219,8 +275,29 @@ class _ImagePageState extends State<ImagePage> {
     );
   }
 
+  void _notifyFavoriteGalleryBloc(BuildContext context) {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      BlocProvider.of<FavoriteGalleryBloc>(context).add(
+        FetchFavoriteGalleryPictureEvent(
+            accessToken: state.user.accessToken,
+            accountUsername: state.user.accountUsername),
+      );
+    }
+  }
+
   String _getPictureHash(String link) {
     return link.substring(20, link.length - 4);
+  }
+
+  String _getUserUsername(BuildContext context) {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      return state.user.accountUsername;
+    }
+    return '';
   }
 }
 

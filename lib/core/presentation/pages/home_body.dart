@@ -70,6 +70,7 @@ class _HomeBodyState extends State<HomeBody> {
                               onTap: () {
                                 Utils.moveToImagePage(
                                   homePageImagesList![index].id,
+                                  homePageImagesList![index].author,
                                   homePageImagesList![index].type,
                                   homePageImagesList![index].width,
                                   homePageImagesList![index].height,

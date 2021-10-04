@@ -76,38 +76,34 @@ class ImgurDataSource {
   }
 
   static Future<List<ImgurFavoriteImage>?> getUserFavoriteImages(
-    BuildContext context,
+    String accountUsername,
+    String accessToken,
   ) async {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      try {
-        final response = await http.get(
-          Uri.parse(
-              Constants.getUserFavoriteImagesURL(state.user.accountUsername)),
-          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
-        );
+    try {
+      final response = await http.get(
+        Uri.parse(Constants.getUserFavoriteImagesURL(accountUsername)),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
 
-        if (response.statusCode != 200) {
-          throw Exception(
-              'Error from API call GET ${Constants.getUserFavoriteImagesURL(state.user.accountUsername)}. Error code: ${response.statusCode}');
-        }
-
-        final jsonResponse = jsonDecode(response.body);
-        final jsonData = jsonResponse?['data'];
-
-        if (jsonData != null) {
-          final finalList = List<ImgurFavoriteImage>.from(
-            jsonData.map(
-              (model) => ImgurFavoriteImage.fromMap(model),
-            ),
-          );
-          return finalList;
-        }
-        return null;
-      } catch (e) {
-        log(e.toString());
+      if (response.statusCode != 200) {
+        throw Exception(
+            'Error from API call GET ${Constants.getUserFavoriteImagesURL(accountUsername)}. Error code: ${response.statusCode}');
       }
+
+      final jsonResponse = jsonDecode(response.body);
+      final jsonData = jsonResponse?['data'];
+
+      if (jsonData != null) {
+        final finalList = List<ImgurFavoriteImage>.from(
+          jsonData.map(
+            (model) => ImgurFavoriteImage.fromMap(model),
+          ),
+        );
+        return finalList;
+      }
+      return null;
+    } catch (e) {
+      log(e.toString());
     }
     return null;
   }

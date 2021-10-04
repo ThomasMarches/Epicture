@@ -1,6 +1,7 @@
 class ImgurImages {
   const ImgurImages({
     required this.id,
+    required this.author,
     required this.title,
     required this.vote,
     required this.width,
@@ -16,6 +17,7 @@ class ImgurImages {
   factory ImgurImages.fromMap(Map<String, dynamic> map) {
     return ImgurImages(
       id: map['id'] as String,
+      author: map['account_url'] as String?,
       title: map['title'] as String?,
       width: map['width'] as int,
       height: map['height'] as int,
@@ -31,6 +33,7 @@ class ImgurImages {
   }
 
   final String id;
+  final String? author;
   final String type;
   final int width;
   final int height;

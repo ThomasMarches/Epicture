@@ -1,6 +1,7 @@
 class ImgurProfileImage {
   const ImgurProfileImage({
     required this.id,
+    required this.author,
     required this.title,
     required this.description,
     required this.datetime,
@@ -30,6 +31,7 @@ class ImgurProfileImage {
   factory ImgurProfileImage.fromMap(Map<String, dynamic> map) {
     return ImgurProfileImage(
       id: map['id'] as String,
+      author: map['account_url'] as String?,
       title: map['title'] as String?,
       description: map['description'] as String?,
       datetime:
@@ -59,6 +61,7 @@ class ImgurProfileImage {
   }
 
   final String id;
+  final String? author;
   final String? title;
   final String? description;
   final DateTime datetime;

@@ -74,6 +74,7 @@ class _SearchBodyState extends State<SearchBody> {
                           onTap: () {
                             Utils.moveToImagePage(
                               userAssociatedImageList![index].id,
+                              userAssociatedImageList![index].author,
                               userAssociatedImageList![index].type,
                               userAssociatedImageList![index].width,
                               userAssociatedImageList![index].height,

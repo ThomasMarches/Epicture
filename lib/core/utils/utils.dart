@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 class Utils {
   static void moveToImagePage(
     String id,
+    String? author,
     String type,
     int width,
     int height,
@@ -21,6 +22,7 @@ class Utils {
         arguments: ImagePageArguments(
           section: section,
           id: id,
+          author: author,
           title: title,
           vote: vote,
           width: width,

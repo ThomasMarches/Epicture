@@ -202,6 +202,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                         onTap: () {
                           Utils.moveToImagePage(
                             userImagesList![index].id,
+                            userImagesList![index].author,
                             userImagesList![index].type,
                             userImagesList![index].width,
                             userImagesList![index].height,
