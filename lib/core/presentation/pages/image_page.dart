@@ -81,7 +81,8 @@ class _ImagePageState extends State<ImagePage> {
                     context: context,
                     builder: (context) {
                       return Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 15),
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, top: 5, bottom: 15),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
