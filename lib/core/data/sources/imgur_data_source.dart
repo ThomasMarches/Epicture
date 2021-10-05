@@ -12,7 +12,6 @@ import 'package:epicture/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 class ImgurDataSource {
   static Future<UserInformations?> getUserInformations(
@@ -255,7 +254,7 @@ class ImgurDataSource {
         http.StreamedResponse streamedResponse = await request.send();
 
         if (streamedResponse.statusCode == 200) {
-          final response = await Response.fromStream(streamedResponse);
+          final response = await http.Response.fromStream(streamedResponse);
           final jsonResponse = jsonDecode(response.body);
           final jsonData = jsonResponse?['data'];
           if (jsonData == null) return null;
