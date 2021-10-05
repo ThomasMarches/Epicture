@@ -8,8 +8,6 @@ class SearchBody extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static const routeName = '/searchpage';
-
   @override
   _SearchBodyState createState() => _SearchBodyState();
 }

@@ -12,8 +12,6 @@ class FavoriteBody extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static const routeName = '/favoritepage';
-
   @override
   _FavoriteBodyState createState() => _FavoriteBodyState();
 }

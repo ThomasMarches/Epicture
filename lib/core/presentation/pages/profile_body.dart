@@ -12,8 +12,6 @@ class ProfileBody extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static const routeName = '/searchpage';
-
   @override
   _ProfileBodyState createState() => _ProfileBodyState();
 }

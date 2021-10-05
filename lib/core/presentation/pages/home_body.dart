@@ -10,8 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
 
-  static const routeName = '/homepage';
-
   @override
   _HomeBodyState createState() => _HomeBodyState();
 }

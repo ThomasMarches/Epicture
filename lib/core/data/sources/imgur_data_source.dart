@@ -407,6 +407,37 @@ class ImgurDataSource {
     return false;
   }
 
+  static Future<bool> deleteImage(
+    BuildContext context,
+    String imageId,
+  ) async {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      try {
+        final response = await http.delete(
+          Uri.parse(Constants.deleteImageURL(imageId)),
+          headers: {'Authorization': 'Bearer ${state.user.accessToken}'},
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Error from API call DELETE ${Constants.deleteImageURL(imageId)}. Error code: ${response.statusCode}');
+        }
+
+        final jsonResponse = jsonDecode(response.body);
+        final jsonData = jsonResponse?['data'];
+
+        if (jsonData == null) return false;
+
+        return true;
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    return false;
+  }
+
   static Future<bool> uploadImage(
     BuildContext context,
     String? imageTitle,

@@ -1,6 +1,7 @@
 import 'package:epicture/core/data/models/imgur_comments.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
+import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/constants.dart';
 import 'package:epicture/core/utils/utils.dart';
@@ -74,43 +75,7 @@ class _ImagePageState extends State<ImagePage> {
               widget.image.author == _getUserUsername(context))
             IconButton(
               onPressed: () {
-                showModalBottomSheet(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    context: context,
-                    builder: (context) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10, right: 10, top: 5, bottom: 15),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              leading: const Icon(Icons.delete),
-                              title: const Text('Delete picture'),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.edit),
-                              title: const Text('Edit title'),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.edit),
-                              title: const Text('Edit description'),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    });
+                showModalSheet(context);
               },
               icon: const Icon(
                 Icons.more_vert,
@@ -276,14 +241,85 @@ class _ImagePageState extends State<ImagePage> {
     );
   }
 
+  Future<dynamic> showModalSheet(BuildContext context) {
+    return showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 5,
+              bottom: 15,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete picture'),
+                  onTap: () async {
+                    await ImgurDataSource.deleteImage(context, widget.image.id)
+                        .then((value) {
+                      if (value == true) {
+                        _notifyProfileGalleryBloc(context);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      } else {
+                        Utils.showSnackbar(
+                          context,
+                          'Couldn\'t perform request',
+                          Colors.red,
+                          const Duration(seconds: 2),
+                        );
+                      }
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text('Edit title'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text('Edit description'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   void _notifyFavoriteGalleryBloc(BuildContext context) {
     final userBloc = BlocProvider.of<UserBloc>(context);
     if (userBloc.state is UserLoadedState) {
       final state = userBloc.state as UserLoadedState;
       BlocProvider.of<FavoriteGalleryBloc>(context).add(
         FetchFavoriteGalleryPictureEvent(
-            accessToken: state.user.accessToken,
-            accountUsername: state.user.accountUsername),
+          accessToken: state.user.accessToken,
+          accountUsername: state.user.accountUsername,
+        ),
+      );
+    }
+  }
+
+  void _notifyProfileGalleryBloc(BuildContext context) {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      BlocProvider.of<ProfileGalleryBloc>(context).add(
+        FetchProfileGalleryPictureEvent(
+          accessToken: state.user.accessToken,
+        ),
       );
     }
   }
