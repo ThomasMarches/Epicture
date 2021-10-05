@@ -141,6 +141,7 @@ class _HomeBodyState extends State<HomeBody> {
                                     await ImgurDataSource.favoriteAnImage(
                                       context,
                                       _getPictureHash(
+                                        homePageImagesList![index].type,
                                         homePageImagesList![index].link,
                                       ),
                                     );
@@ -171,7 +172,10 @@ class _HomeBodyState extends State<HomeBody> {
           );
   }
 
-  String _getPictureHash(String link) {
+  String _getPictureHash(String type, String link) {
+    if (type == 'image/jpeg') {
+      return link.substring(20, link.length - 5);
+    }
     return link.substring(20, link.length - 4);
   }
 }

@@ -154,9 +154,11 @@ class _ImagePageState extends State<ImagePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
-                  child: Text(
-                    widget.image.title == null ? '' : widget.image.title!,
-                    style: const TextStyle(fontSize: 15),
+                  child: Center(
+                    child: Text(
+                      widget.image.title == null ? '' : widget.image.title!,
+                      style: const TextStyle(fontSize: 15),
+                    ),
                   ),
                 ),
                 Container(
@@ -197,9 +199,7 @@ class _ImagePageState extends State<ImagePage> {
                       onPressed: () async {
                         await ImgurDataSource.favoriteAnImage(
                           context,
-                          _getPictureHash(
-                            widget.image.link,
-                          ),
+                          widget.image.id,
                         ).then((value) {
                           if (value == true) {
                             setState(() {
@@ -236,9 +236,9 @@ class _ImagePageState extends State<ImagePage> {
                         controller: _controller,
                         onSubmitted: (String comment) async {
                           _controller.clear();
-                          ImgurDataSource.createCommentOnImage(
+                          await ImgurDataSource.createCommentOnImage(
                             context,
-                            _getPictureHash(widget.image.link),
+                            widget.image.id,
                             comment,
                           ).then((value) {
                             if (value != null) {
@@ -286,10 +286,6 @@ class _ImagePageState extends State<ImagePage> {
             accountUsername: state.user.accountUsername),
       );
     }
-  }
-
-  String _getPictureHash(String link) {
-    return link.substring(20, link.length - 4);
   }
 
   String _getUserUsername(BuildContext context) {
