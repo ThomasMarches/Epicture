@@ -1,7 +1,10 @@
 import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
+import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import '../../../l10n/l10n.dart';
 
 class HomeBody extends StatefulWidget {
@@ -141,10 +144,14 @@ class _HomeBodyState extends State<HomeBody> {
                                     await ImgurDataSource.favoriteAnImage(
                                       context,
                                       homePageImagesList![index].id,
-                                    );
-                                    setState(() {
-                                      userLikedPictures![index] =
-                                          !userLikedPictures![index];
+                                    ).then((value) {
+                                      if (value == true) {
+                                        _notifyFavoriteGalleryBloc(context);
+                                        setState(() {
+                                          userLikedPictures![index] =
+                                              !userLikedPictures![index];
+                                        });
+                                      }
                                     });
                                   },
                                   icon: Icon(
@@ -167,5 +174,17 @@ class _HomeBodyState extends State<HomeBody> {
               ),
             ),
           );
+  }
+
+  void _notifyFavoriteGalleryBloc(BuildContext context) {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      BlocProvider.of<FavoriteGalleryBloc>(context).add(
+        FetchFavoriteGalleryPictureEvent(
+            accessToken: state.user.accessToken,
+            accountUsername: state.user.accountUsername),
+      );
+    }
   }
 }

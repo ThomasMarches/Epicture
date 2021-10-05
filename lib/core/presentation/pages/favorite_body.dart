@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:epicture/core/data/models/imgur_favorite_image.dart';
+import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/utils.dart';
@@ -97,10 +98,25 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                         ),
                         Flexible(
                           child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                userLikedPictures![index] =
-                                    !userLikedPictures![index];
+                            onPressed: () async {
+                              await ImgurDataSource.favoriteAnImage(
+                                context,
+                                userFavoriteImagesList![index].id,
+                              ).then((value) {
+                                if (value == true) {
+                                  _notifyFavoriteGalleryBloc(context);
+                                  setState(() {
+                                    userLikedPictures![index] =
+                                        !userLikedPictures![index];
+                                  });
+                                } else {
+                                  Utils.showSnackbar(
+                                    context,
+                                    'Error: 404 not found',
+                                    Colors.red,
+                                    const Duration(seconds: 2),
+                                  );
+                                }
                               });
                             },
                             icon: Icon(
@@ -119,5 +135,17 @@ class _FavoriteBodyState extends State<FavoriteBody> {
             : const Center(child: CircularProgressIndicator());
       },
     );
+  }
+
+  void _notifyFavoriteGalleryBloc(BuildContext context) {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    if (userBloc.state is UserLoadedState) {
+      final state = userBloc.state as UserLoadedState;
+      BlocProvider.of<FavoriteGalleryBloc>(context).add(
+        FetchFavoriteGalleryPictureEvent(
+            accessToken: state.user.accessToken,
+            accountUsername: state.user.accountUsername),
+      );
+    }
   }
 }
