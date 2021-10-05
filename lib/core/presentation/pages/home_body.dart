@@ -140,10 +140,7 @@ class _HomeBodyState extends State<HomeBody> {
                                   onPressed: () async {
                                     await ImgurDataSource.favoriteAnImage(
                                       context,
-                                      _getPictureHash(
-                                        homePageImagesList![index].type,
-                                        homePageImagesList![index].link,
-                                      ),
+                                      homePageImagesList![index].id,
                                     );
                                     setState(() {
                                       userLikedPictures![index] =
@@ -170,12 +167,5 @@ class _HomeBodyState extends State<HomeBody> {
               ),
             ),
           );
-  }
-
-  String _getPictureHash(String type, String link) {
-    if (type == 'image/jpeg') {
-      return link.substring(20, link.length - 5);
-    }
-    return link.substring(20, link.length - 4);
   }
 }
