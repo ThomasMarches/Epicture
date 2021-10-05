@@ -147,7 +147,7 @@ class ImgurDataSource {
         );
         finalList.removeWhere(
           (element) {
-            return (element.type != 'jpg' && element.type != 'png') ||
+            return (element.type != 'jpeg' && element.type != 'png') ||
                 element.height > 1000;
           },
         );
@@ -197,7 +197,7 @@ class ImgurDataSource {
 
         finalList.removeWhere(
           (element) {
-            return (element.type != 'jpg' && element.type != 'png') ||
+            return (element.type != 'jpeg' && element.type != 'png') ||
                 element.height > 600;
           },
         );
