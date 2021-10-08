@@ -300,37 +300,30 @@ class _ImagePageState extends State<ImagePage> {
   }
 
   void _notifyFavoriteGalleryBloc(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      BlocProvider.of<FavoriteGalleryBloc>(context).add(
-        FetchFavoriteGalleryPictureEvent(
-          accessToken: state.user.accessToken,
-          accountUsername: state.user.accountUsername,
-        ),
-      );
-    }
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    BlocProvider.of<FavoriteGalleryBloc>(context).add(
+      FetchFavoriteGalleryPictureEvent(
+        accessToken: userBlocState.user.accessToken,
+        accountUsername: userBlocState.user.accountUsername,
+      ),
+    );
   }
 
   void _notifyProfileGalleryBloc(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      BlocProvider.of<ProfileGalleryBloc>(context).add(
-        FetchProfileGalleryPictureEvent(
-          accessToken: state.user.accessToken,
-        ),
-      );
-    }
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    BlocProvider.of<ProfileGalleryBloc>(context).add(
+      FetchProfileGalleryPictureEvent(
+        accessToken: userBlocState.user.accessToken,
+      ),
+    );
   }
 
   String _getUserUsername(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      return state.user.accountUsername;
-    }
-    return '';
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    return userBlocState.user.accountUsername;
   }
 }
 
@@ -389,7 +382,6 @@ class SingleCommentWidget extends StatefulWidget {
 class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   var hasUpVoted = false;
   var hasDownVoted = false;
-  UserLoadedState? state;
   bool isAuthor = false;
 
   @override
@@ -475,7 +467,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
               ),
               IconButton(
                 onPressed: () async {
-                  ImgurDataSource.voteOnComment(
+                  await ImgurDataSource.voteOnComment(
                           context,
                           widget.imageCommentsList![widget.index].id.toString(),
                           'down')
@@ -506,8 +498,8 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     );
   }
 
-  void _deleteComment() {
-    ImgurDataSource.deleteComment(
+  void _deleteComment() async {
+    await ImgurDataSource.deleteComment(
             context, widget.imageCommentsList![widget.index].id.toString())
         .then(
       (value) {
@@ -524,19 +516,15 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   }
 
   void _setupIsAuthor(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      state = userBloc.state as UserLoadedState;
-      if (widget.imageCommentsList?[widget.index].author ==
-          state?.user.accountUsername) {
-        setState(
-          () {
-            isAuthor = true;
-          },
-        );
-      }
-    } else {
-      state = null;
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    if (widget.imageCommentsList?[widget.index].author ==
+        userBlocState.user.accountUsername) {
+      setState(
+        () {
+          isAuthor = true;
+        },
+      );
     }
   }
 }

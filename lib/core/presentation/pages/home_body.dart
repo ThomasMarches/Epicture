@@ -175,14 +175,13 @@ class _HomeBodyState extends State<HomeBody> {
   }
 
   void _notifyFavoriteGalleryBloc(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      BlocProvider.of<FavoriteGalleryBloc>(context).add(
-        FetchFavoriteGalleryPictureEvent(
-            accessToken: state.user.accessToken,
-            accountUsername: state.user.accountUsername),
-      );
-    }
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    BlocProvider.of<FavoriteGalleryBloc>(context).add(
+      FetchFavoriteGalleryPictureEvent(
+        accessToken: userBlocState.user.accessToken,
+        accountUsername: userBlocState.user.accountUsername,
+      ),
+    );
   }
 }

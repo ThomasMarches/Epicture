@@ -28,11 +28,11 @@ class _SearchBodyState extends State<SearchBody> {
               border: OutlineInputBorder(),
               labelText: 'Search',
             ),
-            onSubmitted: (value) {
+            onSubmitted: (value) async {
               setState(() {
                 hasRequested = true;
               });
-              ImgurDataSource.searchForImages(context, value).then(
+              await ImgurDataSource.searchForImages(context, value).then(
                 (userImagesList) => setState(
                   () {
                     userAssociatedImageList = userImagesList;
