@@ -38,9 +38,15 @@ class ImagePageArguments {
   final String link;
 }
 
+//TODO: impletement image description
 class ImagePage extends StatefulWidget {
-  const ImagePage({Key? key, required this.image}) : super(key: key);
+  const ImagePage({
+    Key? key,
+    required this.image,
+    this.commentsList,
+  }) : super(key: key);
 
+  final List<ImgurComments>? commentsList;
   final ImagePageArguments image;
   static const routeName = '/images';
 
@@ -57,6 +63,14 @@ class _ImagePageState extends State<ImagePage> {
   void initState() {
     super.initState();
     isFavorite = widget.image.favorite;
+    if (widget.commentsList != null) {
+      setState(
+        () {
+          imageCommentsList = widget.commentsList;
+        },
+      );
+      return;
+    }
     ImgurDataSource.getImageComments(context, widget.image.id).then(
       (value) => setState(
         () {

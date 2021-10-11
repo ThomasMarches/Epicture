@@ -26,8 +26,10 @@ class _HomeBodyState extends State<HomeBody> {
         () {
           homePageImagesList = homePageImages;
           if (homePageImagesList == null) return;
-          userLikedPictures = List.generate(homePageImagesList!.length,
-              (index) => homePageImagesList![index].favorite);
+          userLikedPictures = List.generate(
+            homePageImagesList!.length,
+            (index) => homePageImagesList![index].favorite,
+          );
         },
       ),
     );
