@@ -29,7 +29,7 @@ void main() {
   group('ImagePage', () {
     testWidgets('renders an image without comment', (tester) async {
       mockNetworkImagesFor(() async {
-        return await tester
+        await tester
             .pumpWidget(MaterialApp(home: ImagePage(image: image)));
       }).then((value) {
         expect(find.byType(ImagePage), findsOneWidget);
@@ -73,7 +73,7 @@ void main() {
           accountUsername: username,
           accountId: '',
         )));
-        return await tester.pumpWidget(BlocProvider(
+        await tester.pumpWidget(BlocProvider(
           create: (context) => userBloc,
           child: MaterialApp(
             home: ImagePage(

@@ -19,7 +19,7 @@ void main() {
         accountId: '',
       )));
 
-      return await widgetTester
+      await widgetTester
           .pumpWidget(MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -59,7 +59,7 @@ void main() {
       final profileBloc = ProfileGalleryBloc();
       profileBloc.emit(FetchProfileGalleryPictureLoading());
 
-      return await widgetTester
+      await widgetTester
           .pumpWidget(MultiBlocProvider(
         providers: [
           BlocProvider(
