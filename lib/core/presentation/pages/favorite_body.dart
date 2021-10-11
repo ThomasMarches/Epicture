@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:epicture/core/data/models/imgur_favorite_image.dart';
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
@@ -17,7 +17,7 @@ class FavoriteBody extends StatefulWidget {
 }
 
 class _FavoriteBodyState extends State<FavoriteBody> {
-  List<ImgurFavoriteImage>? userFavoriteImagesList;
+  List<ImgurImages>? userFavoriteImagesList;
   List<bool>? userLikedPictures;
 
   @override

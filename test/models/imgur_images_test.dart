@@ -15,6 +15,7 @@ void main() {
       expect(comment.id, 'SbBGk');
       expect(comment.title, null);
       expect(comment.description, null);
+      expect(comment.author, "TestName");
       expect(comment.vote, null);
       expect(comment.width, 2559);
       expect(comment.height, 1439);

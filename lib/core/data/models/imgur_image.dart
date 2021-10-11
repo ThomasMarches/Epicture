@@ -14,6 +14,9 @@ class ImgurImages {
   });
 
   factory ImgurImages.fromMap(Map<String, dynamic> map) {
+    final link = map['link'] as String;
+    final type = map['type'].toString().substring(6);
+
     return ImgurImages(
       id: map['id'] as String,
       author: map['account_url'] as String?,
@@ -26,7 +29,9 @@ class ImgurImages {
       description: map['description'] as String?,
       datetime:
           DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
-      link: map['link'] as String,
+      link: (link.contains('/gallery/'))
+          ? 'https://i.imgur.com/${map['cover']}.$type'
+          : link,
     );
   }
 

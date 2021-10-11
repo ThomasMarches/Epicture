@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:epicture/core/data/models/imgur_comments.dart';
-import 'package:epicture/core/data/models/imgur_favorite_image.dart';
 import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/models/imgur_profile_image.dart';
 import 'package:epicture/core/data/models/user_informations.dart';
@@ -70,7 +69,7 @@ class ImgurDataSource {
     return null;
   }
 
-  static Future<List<ImgurFavoriteImage>?> getUserFavoriteImages(
+  static Future<List<ImgurImages>?> getUserFavoriteImages(
     String accountUsername,
     String accessToken,
   ) async {
@@ -89,9 +88,9 @@ class ImgurDataSource {
       final jsonData = jsonResponse?['data'];
 
       if (jsonData != null) {
-        final finalList = List<ImgurFavoriteImage>.from(
+        final finalList = List<ImgurImages>.from(
           jsonData.map(
-            (model) => ImgurFavoriteImage.fromMap(model),
+            (model) => ImgurImages.fromMap(model),
           ),
         );
         return finalList;

@@ -29,8 +29,7 @@ void main() {
   group('ImagePage', () {
     testWidgets('renders an image without comment', (tester) async {
       mockNetworkImagesFor(() async {
-        await tester
-            .pumpWidget(MaterialApp(home: ImagePage(image: image)));
+        await tester.pumpWidget(MaterialApp(home: ImagePage(image: image)));
       }).then((value) {
         expect(find.byType(ImagePage), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);

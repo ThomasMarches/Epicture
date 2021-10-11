@@ -18,5 +18,5 @@ class FetchFavoriteGalleryPictureSuccess extends FavoriteGalleryBlocState {
     this.userFavoriteImageList,
   });
 
-  final List<ImgurFavoriteImage>? userFavoriteImageList;
+  final List<ImgurImages>? userFavoriteImageList;
 }
