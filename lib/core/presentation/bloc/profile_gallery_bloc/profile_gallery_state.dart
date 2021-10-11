@@ -18,5 +18,5 @@ class FetchProfileGalleryPictureSuccess extends ProfileGalleryBlocState {
     this.userImagesList,
   });
 
-  final List<ImgurProfileImage>? userImagesList;
+  final List<ImgurImages>? userImagesList;
 }

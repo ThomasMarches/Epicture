@@ -32,7 +32,7 @@ class _SearchBodyState extends State<SearchBody> {
               setState(() {
                 hasRequested = true;
               });
-              await ImgurDataSource.searchForImages(context, value).then(
+              await ImgurDataSource.searchForImages(value).then(
                 (userImagesList) => setState(
                   () {
                     userAssociatedImageList = userImagesList;

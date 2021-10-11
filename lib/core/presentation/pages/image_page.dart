@@ -443,7 +443,12 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     onPressed: () async {
-                      Utils.showAlertDialog(context, _deleteComment);
+                      Utils.showAlertDialog(
+                        context,
+                        _deleteComment,
+                        "Confirm delete",
+                        "Would you like to continue and delete your comment ?",
+                      );
                     },
                     icon: const Icon(
                       Icons.delete,

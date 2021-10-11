@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:epicture/core/data/models/imgur_comments.dart';
 import 'package:epicture/core/data/models/imgur_image.dart';
-import 'package:epicture/core/data/models/imgur_profile_image.dart';
 import 'package:epicture/core/data/models/user_informations.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/constants.dart';
@@ -38,7 +37,7 @@ class ImgurDataSource {
     return null;
   }
 
-  static Future<List<ImgurProfileImage>?> getUserImages(
+  static Future<List<ImgurImages>?> getUserImages(
     String accessToken,
   ) async {
     try {
@@ -54,9 +53,9 @@ class ImgurDataSource {
       final jsonData = jsonResponse?['data'];
 
       if (jsonData != null) {
-        final finalList = List<ImgurProfileImage>.from(
+        final finalList = List<ImgurImages>.from(
           jsonData.map(
-            (model) => ImgurProfileImage.fromMap(model),
+            (model) => ImgurImages.fromMap(model),
           ),
         );
         return finalList;
@@ -103,7 +102,6 @@ class ImgurDataSource {
   }
 
   static Future<List<ImgurImages>?> searchForImages(
-    BuildContext context,
     String? tag,
   ) async {
     final userAssociatedImageList = [];

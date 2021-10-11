@@ -36,14 +36,15 @@ class Utils {
   static void showAlertDialog(
     BuildContext context,
     void Function() onConfirmCallback,
+    String title,
+    String message,
   ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Confirm delete"),
-          content: const Text(
-              "Would you like to continue and delete your comment ?"),
+          title: Text(title),
+          content: Text(message),
           actions: [
             TextButton(
               child: const Text("Cancel"),

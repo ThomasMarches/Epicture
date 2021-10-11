@@ -1,4 +1,4 @@
-import 'package:epicture/core/data/models/imgur_profile_image.dart';
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/models/user_informations.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
@@ -18,7 +18,7 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
   UserInformations? userInformations;
-  List<ImgurProfileImage>? userImagesList;
+  List<ImgurImages>? userImagesList;
   var isEditing = false;
   String? newUsername;
   String? newDescription;
