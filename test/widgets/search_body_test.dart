@@ -4,8 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SearchBody', () {
-    testWidgets('renders SearchBody',
-        (tester) async {
+    testWidgets('renders SearchBody', (tester) async {
       await tester.pumpWidget(const MaterialApp(
         home: Scaffold(
           body: SearchBody(),

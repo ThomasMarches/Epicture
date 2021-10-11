@@ -11,13 +11,13 @@ void main() {
   group('HomePage tests', () {
     testWidgets('renders HomePage test', (widgetTester) async {
       final userBloc = UserBloc();
-        userBloc.emit(const UserLoadedState(
-            user: UserEntity(
-          accessToken: '',
-          refreshToken: '',
-          accountUsername: '',
-          accountId: '',
-        )));
+      userBloc.emit(const UserLoadedState(
+          user: UserEntity(
+        accessToken: '',
+        refreshToken: '',
+        accountUsername: '',
+        accountId: '',
+      )));
 
       await widgetTester.pumpWidget(MaterialApp(
           home: MultiBlocProvider(
