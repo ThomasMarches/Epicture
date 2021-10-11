@@ -208,7 +208,6 @@ class _ProfileBodyState extends State<ProfileBody> {
                             userImagesList![index].title,
                             userImagesList![index].description,
                             userImagesList![index].datetime,
-                            userImagesList![index].section,
                             userImagesList![index].link,
                             context,
                           );

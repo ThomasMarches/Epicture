@@ -14,13 +14,11 @@ class Utils {
     String? title,
     String? description,
     DateTime datetime,
-    String? section,
     String link,
     BuildContext context,
   ) {
     Navigator.of(context).pushNamed(ImagePage.routeName,
         arguments: ImagePageArguments(
-          section: section,
           id: id,
           author: author,
           title: title,

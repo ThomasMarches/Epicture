@@ -20,7 +20,6 @@ class ImagePageArguments {
     required this.type,
     required this.description,
     required this.datetime,
-    required this.section,
     required this.link,
   });
 
@@ -34,7 +33,6 @@ class ImagePageArguments {
   final String? title;
   final String? description;
   final DateTime datetime;
-  final String? section;
   final String link;
 }
 

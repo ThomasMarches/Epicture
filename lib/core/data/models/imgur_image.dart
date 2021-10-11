@@ -10,7 +10,6 @@ class ImgurImages {
     required this.type,
     required this.description,
     required this.datetime,
-    required this.section,
     required this.link,
   });
 
@@ -27,7 +26,6 @@ class ImgurImages {
       description: map['description'] as String?,
       datetime:
           DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
-      section: map['section'] as String?,
       link: map['link'] as String,
     );
   }
@@ -42,6 +40,5 @@ class ImgurImages {
   final String? title;
   final String? description;
   final DateTime datetime;
-  final String? section;
   final String link;
 }

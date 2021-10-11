@@ -7,7 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('FavoriteBody', () {
-    testWidgets('renders FavoriteBody', (tester) async {
+    testWidgets('renders FavoriteBody with ProgressIndicator if no pictures',
+        (tester) async {
       await tester.pumpWidget(MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -17,7 +18,11 @@ void main() {
             create: (context) => FavoriteGalleryBloc(),
           ),
         ],
-        child: const FavoriteBody(),
+        child: const MaterialApp(
+          home: Scaffold(
+            body: FavoriteBody(),
+          ),
+        ),
       ));
       expect(find.byType(FavoriteBody), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsOneWidget);

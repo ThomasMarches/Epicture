@@ -21,7 +21,6 @@ void main() {
       expect(comment.type, 'jpeg');
       expect(comment.favorite, false);
       expect(comment.link, 'http://i.imgur.com/SbBGk.jpg');
-      expect(comment.section, null);
       expect(
         comment.datetime,
         DateTime.fromMillisecondsSinceEpoch(1341533193 * 1000),

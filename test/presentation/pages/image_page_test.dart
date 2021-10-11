@@ -22,7 +22,6 @@ final image = ImagePageArguments(
   title: 'TestTitle',
   description: 'A simple description',
   datetime: DateTime.now(),
-  section: null,
   link: 'https://i.imgur.com/jUOQtxg.jpeg',
 );
 
@@ -34,7 +33,6 @@ void main() {
             .pumpWidget(MaterialApp(home: ImagePage(image: image)));
       }).then((value) {
         expect(find.byType(ImagePage), findsOneWidget);
-        expect(find.byType(AppBar), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
         expect(find.byIcon(Icons.keyboard_arrow_left), findsOneWidget);
         expect(find.text('Epicture'), findsOneWidget);

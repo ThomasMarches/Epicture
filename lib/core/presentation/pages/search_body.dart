@@ -81,7 +81,6 @@ class _SearchBodyState extends State<SearchBody> {
                               userAssociatedImageList![index].title,
                               userAssociatedImageList![index].description,
                               userAssociatedImageList![index].datetime,
-                              userAssociatedImageList![index].section,
                               userAssociatedImageList![index].link,
                               context,
                             );

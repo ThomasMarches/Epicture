@@ -82,7 +82,6 @@ class _HomeBodyState extends State<HomeBody> {
                                   homePageImagesList![index].title,
                                   homePageImagesList![index].description,
                                   homePageImagesList![index].datetime,
-                                  homePageImagesList![index].section,
                                   homePageImagesList![index].link,
                                   context,
                                 );

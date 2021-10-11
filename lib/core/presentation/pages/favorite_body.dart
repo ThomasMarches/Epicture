@@ -77,7 +77,6 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                                 userFavoriteImagesList![index].title,
                                 userFavoriteImagesList![index].description,
                                 userFavoriteImagesList![index].datetime,
-                                userFavoriteImagesList![index].section,
                                 userFavoriteImagesList![index].link,
                                 context,
                               );
