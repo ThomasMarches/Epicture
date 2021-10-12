@@ -138,14 +138,12 @@ class _ImagePreviewState extends State<ImagePreview> {
                           imageDescription, widget.previewImage)
                       .then((value) {
                     if (value == true) {
-                      final userBloc = BlocProvider.of<UserBloc>(context);
-                      if (userBloc.state is UserLoadedState) {
-                        final state = userBloc.state as UserLoadedState;
-                        BlocProvider.of<ProfileGalleryBloc>(context).add(
-                          FetchProfileGalleryPictureEvent(
-                              accessToken: state.user.accessToken),
-                        );
-                      }
+                      final userBlocState = BlocProvider.of<UserBloc>(context)
+                          .state as UserLoadedState;
+                      BlocProvider.of<ProfileGalleryBloc>(context).add(
+                        FetchProfileGalleryPictureEvent(
+                            accessToken: userBlocState.user.accessToken),
+                      );
                     }
                   });
                 },

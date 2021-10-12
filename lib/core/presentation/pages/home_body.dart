@@ -1,13 +1,14 @@
 import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
+import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import '../../../l10n/l10n.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
-
-  static const routeName = '/homepage';
 
   @override
   _HomeBodyState createState() => _HomeBodyState();
@@ -25,8 +26,10 @@ class _HomeBodyState extends State<HomeBody> {
         () {
           homePageImagesList = homePageImages;
           if (homePageImagesList == null) return;
-          userLikedPictures = List.generate(homePageImagesList!.length,
-              (index) => homePageImagesList![index].favorite);
+          userLikedPictures = List.generate(
+            homePageImagesList!.length,
+            (index) => homePageImagesList![index].favorite,
+          );
         },
       ),
     );
@@ -69,17 +72,7 @@ class _HomeBodyState extends State<HomeBody> {
                             InkWell(
                               onTap: () {
                                 Utils.moveToImagePage(
-                                  homePageImagesList![index].id,
-                                  homePageImagesList![index].type,
-                                  homePageImagesList![index].width,
-                                  homePageImagesList![index].height,
-                                  homePageImagesList![index].vote,
-                                  homePageImagesList![index].favorite,
-                                  homePageImagesList![index].title,
-                                  homePageImagesList![index].description,
-                                  homePageImagesList![index].datetime,
-                                  homePageImagesList![index].section,
-                                  homePageImagesList![index].link,
+                                  homePageImagesList![index],
                                   context,
                                 );
                               },
@@ -139,13 +132,15 @@ class _HomeBodyState extends State<HomeBody> {
                                   onPressed: () async {
                                     await ImgurDataSource.favoriteAnImage(
                                       context,
-                                      _getPictureHash(
-                                        homePageImagesList![index].link,
-                                      ),
-                                    );
-                                    setState(() {
-                                      userLikedPictures![index] =
-                                          !userLikedPictures![index];
+                                      homePageImagesList![index].id,
+                                    ).then((value) {
+                                      if (value == true) {
+                                        _notifyFavoriteGalleryBloc(context);
+                                        setState(() {
+                                          userLikedPictures![index] =
+                                              !userLikedPictures![index];
+                                        });
+                                      }
                                     });
                                   },
                                   icon: Icon(
@@ -170,7 +165,14 @@ class _HomeBodyState extends State<HomeBody> {
           );
   }
 
-  String _getPictureHash(String link) {
-    return link.substring(20, link.length - 4);
+  void _notifyFavoriteGalleryBloc(BuildContext context) {
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    BlocProvider.of<FavoriteGalleryBloc>(context).add(
+      FetchFavoriteGalleryPictureEvent(
+        accessToken: userBlocState.user.accessToken,
+        accountUsername: userBlocState.user.accountUsername,
+      ),
+    );
   }
 }

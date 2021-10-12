@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:epicture/core/data/models/imgur_profile_image.dart';
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:equatable/equatable.dart';
 

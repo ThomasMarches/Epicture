@@ -5,6 +5,7 @@ class UserInformations {
     required this.bio,
     required this.reputationName,
     required this.avatar,
+    required this.id,
   });
 
   factory UserInformations.fromMap(Map<String, dynamic> map) {
@@ -14,6 +15,7 @@ class UserInformations {
       bio: map['bio'] as String?,
       reputationName: map['reputation_name'] as String,
       avatar: map['avatar'] as String?,
+      id: map['id'] as int,
     );
   }
 
@@ -22,4 +24,5 @@ class UserInformations {
   String? bio;
   final String reputationName;
   final String? avatar;
+  final int id;
 }

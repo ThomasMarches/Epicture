@@ -8,8 +8,6 @@ class SearchBody extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static const routeName = '/searchpage';
-
   @override
   _SearchBodyState createState() => _SearchBodyState();
 }
@@ -30,11 +28,11 @@ class _SearchBodyState extends State<SearchBody> {
               border: OutlineInputBorder(),
               labelText: 'Search',
             ),
-            onSubmitted: (value) {
+            onSubmitted: (value) async {
               setState(() {
                 hasRequested = true;
               });
-              ImgurDataSource.searchForImages(context, value).then(
+              await ImgurDataSource.searchForImages(value).then(
                 (userImagesList) => setState(
                   () {
                     userAssociatedImageList = userImagesList;
@@ -73,17 +71,7 @@ class _SearchBodyState extends State<SearchBody> {
                         child: InkWell(
                           onTap: () {
                             Utils.moveToImagePage(
-                              userAssociatedImageList![index].id,
-                              userAssociatedImageList![index].type,
-                              userAssociatedImageList![index].width,
-                              userAssociatedImageList![index].height,
-                              userAssociatedImageList![index].vote,
-                              userAssociatedImageList![index].favorite,
-                              userAssociatedImageList![index].title,
-                              userAssociatedImageList![index].description,
-                              userAssociatedImageList![index].datetime,
-                              userAssociatedImageList![index].section,
-                              userAssociatedImageList![index].link,
+                              userAssociatedImageList![index],
                               context,
                             );
                           },

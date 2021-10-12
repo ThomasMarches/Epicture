@@ -1,5 +1,8 @@
 import 'package:epicture/core/data/models/imgur_comments.dart';
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
+import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
+import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/utils/constants.dart';
 import 'package:epicture/core/utils/utils.dart';
@@ -8,35 +11,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ImagePageArguments {
   const ImagePageArguments({
-    required this.id,
-    required this.title,
-    required this.vote,
-    required this.width,
-    required this.height,
-    required this.favorite,
-    required this.type,
-    required this.description,
-    required this.datetime,
-    required this.section,
-    required this.link,
+    required this.image,
   });
 
-  final String id;
-  final String type;
-  final int width;
-  final int height;
-  final String? vote;
-  final bool favorite;
-  final String? title;
-  final String? description;
-  final DateTime datetime;
-  final String? section;
-  final String link;
+  final ImgurImages image;
 }
 
+//TODO: impletement image description
 class ImagePage extends StatefulWidget {
-  const ImagePage({Key? key, required this.image}) : super(key: key);
+  const ImagePage({
+    Key? key,
+    required this.image,
+    this.commentsList,
+  }) : super(key: key);
 
+  final List<ImgurComments>? commentsList;
   final ImagePageArguments image;
   static const routeName = '/images';
 
@@ -47,11 +36,21 @@ class ImagePage extends StatefulWidget {
 class _ImagePageState extends State<ImagePage> {
   List<ImgurComments>? imageCommentsList;
   final _controller = TextEditingController();
+  var isFavorite = false;
 
   @override
   void initState() {
     super.initState();
-    ImgurDataSource.getImageComments(context, widget.image.id).then(
+    isFavorite = widget.image.image.favorite;
+    if (widget.commentsList != null) {
+      setState(
+        () {
+          imageCommentsList = widget.commentsList;
+        },
+      );
+      return;
+    }
+    ImgurDataSource.getImageComments(context, widget.image.image.id).then(
       (value) => setState(
         () {
           imageCommentsList = value;
@@ -64,6 +63,19 @@ class _ImagePageState extends State<ImagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          if (widget.image.image.author != null &&
+              widget.image.image.author == _getUserUsername(context))
+            IconButton(
+              onPressed: () {
+                showModalSheet(context);
+              },
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.black,
+              ),
+            ),
+        ],
         elevation: 5,
         leading: IconButton(
           color: Colors.black,
@@ -100,34 +112,30 @@ class _ImagePageState extends State<ImagePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
-                  child: Text(
-                    widget.image.title == null ? '' : widget.image.title!,
-                    style: const TextStyle(fontSize: 15),
+                  child: Center(
+                    child: Text(
+                      widget.image.image.title == null
+                          ? ''
+                          : widget.image.image.title!,
+                      style: const TextStyle(fontSize: 15),
+                    ),
                   ),
                 ),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     image: DecorationImage(
-                      image: Image.network(widget.image.link).image,
+                      image: Image.network(widget.image.image.link).image,
                       fit: BoxFit.fill,
                     ),
                   ),
                   margin: const EdgeInsets.all(5),
                   width: MediaQuery.of(context).size.width - 50,
-                  height: widget.image.height.toDouble(),
+                  height: widget.image.image.height.toDouble(),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.comment,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const Spacer(flex: 3),
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(
@@ -135,9 +143,10 @@ class _ImagePageState extends State<ImagePage> {
                         color: Colors.grey,
                       ),
                     ),
-                    const Spacer(),
                     Text(
-                      widget.image.vote == null ? '' : widget.image.vote!,
+                      widget.image.image.vote == null
+                          ? ''
+                          : widget.image.image.vote!,
                     ),
                     const Spacer(),
                     IconButton(
@@ -152,16 +161,26 @@ class _ImagePageState extends State<ImagePage> {
                       onPressed: () async {
                         await ImgurDataSource.favoriteAnImage(
                           context,
-                          _getPictureHash(
-                            widget.image.link,
-                          ),
-                        );
+                          widget.image.image.id,
+                        ).then((value) {
+                          if (value == true) {
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                            _notifyFavoriteGalleryBloc(context);
+                          } else {
+                            Utils.showSnackbar(
+                              context,
+                              'Couldn\'t perform request',
+                              Colors.red,
+                              const Duration(seconds: 2),
+                            );
+                          }
+                        });
                       },
                       icon: Icon(
-                        widget.image.favorite
-                            ? Icons.favorite
-                            : Icons.favorite_outline,
-                        color: widget.image.favorite ? Colors.red : Colors.grey,
+                        isFavorite ? Icons.favorite : Icons.favorite_outline,
+                        color: isFavorite ? Colors.red : Colors.grey,
                       ),
                     )
                   ]),
@@ -169,7 +188,7 @@ class _ImagePageState extends State<ImagePage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                      'Uploaded: ${Utils.getTimeDifference(widget.image.datetime)}'),
+                      'Uploaded: ${Utils.getTimeDifference(widget.image.image.datetime)}'),
                 ),
                 Column(
                   children: [
@@ -179,9 +198,9 @@ class _ImagePageState extends State<ImagePage> {
                         controller: _controller,
                         onSubmitted: (String comment) async {
                           _controller.clear();
-                          ImgurDataSource.createCommentOnImage(
+                          await ImgurDataSource.createCommentOnImage(
                             context,
-                            _getPictureHash(widget.image.link),
+                            widget.image.image.id,
                             comment,
                           ).then((value) {
                             if (value != null) {
@@ -219,8 +238,90 @@ class _ImagePageState extends State<ImagePage> {
     );
   }
 
-  String _getPictureHash(String link) {
-    return link.substring(20, link.length - 4);
+  Future<dynamic> showModalSheet(BuildContext context) {
+    return showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 5,
+              bottom: 15,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete picture'),
+                  onTap: () async {
+                    await ImgurDataSource.deleteImage(
+                            context, widget.image.image.id)
+                        .then((value) {
+                      if (value == true) {
+                        _notifyProfileGalleryBloc(context);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      } else {
+                        Utils.showSnackbar(
+                          context,
+                          'Couldn\'t perform request',
+                          Colors.red,
+                          const Duration(seconds: 2),
+                        );
+                      }
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text('Edit title'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text('Edit description'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _notifyFavoriteGalleryBloc(BuildContext context) {
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    BlocProvider.of<FavoriteGalleryBloc>(context).add(
+      FetchFavoriteGalleryPictureEvent(
+        accessToken: userBlocState.user.accessToken,
+        accountUsername: userBlocState.user.accountUsername,
+      ),
+    );
+  }
+
+  void _notifyProfileGalleryBloc(BuildContext context) {
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    BlocProvider.of<ProfileGalleryBloc>(context).add(
+      FetchProfileGalleryPictureEvent(
+        accessToken: userBlocState.user.accessToken,
+      ),
+    );
+  }
+
+  String _getUserUsername(BuildContext context) {
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    return userBlocState.user.accountUsername;
   }
 }
 
@@ -279,7 +380,6 @@ class SingleCommentWidget extends StatefulWidget {
 class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   var hasUpVoted = false;
   var hasDownVoted = false;
-  UserLoadedState? state;
   bool isAuthor = false;
 
   @override
@@ -329,7 +429,12 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     onPressed: () async {
-                      Utils.showAlertDialog(context, _deleteComment);
+                      Utils.showAlertDialog(
+                        context,
+                        _deleteComment,
+                        "Confirm delete",
+                        "Would you like to continue and delete your comment ?",
+                      );
                     },
                     icon: const Icon(
                       Icons.delete,
@@ -365,7 +470,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
               ),
               IconButton(
                 onPressed: () async {
-                  ImgurDataSource.voteOnComment(
+                  await ImgurDataSource.voteOnComment(
                           context,
                           widget.imageCommentsList![widget.index].id.toString(),
                           'down')
@@ -396,8 +501,8 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     );
   }
 
-  void _deleteComment() {
-    ImgurDataSource.deleteComment(
+  void _deleteComment() async {
+    await ImgurDataSource.deleteComment(
             context, widget.imageCommentsList![widget.index].id.toString())
         .then(
       (value) {
@@ -414,19 +519,15 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   }
 
   void _setupIsAuthor(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      state = userBloc.state as UserLoadedState;
-      if (widget.imageCommentsList?[widget.index].author ==
-          state?.user.accountUsername) {
-        setState(
-          () {
-            isAuthor = true;
-          },
-        );
-      }
-    } else {
-      state = null;
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    if (widget.imageCommentsList?[widget.index].author ==
+        userBlocState.user.accountUsername) {
+      setState(
+        () {
+          isAuthor = true;
+        },
+      );
     }
   }
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:epicture/core/presentation/app/app.dart';
 import 'package:epicture/core/presentation/app/app_bloc_observer.dart';
+import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:flutter/widgets.dart';
@@ -23,6 +24,9 @@ void main() {
         ),
         BlocProvider(
           create: (context) => ProfileGalleryBloc(),
+        ),
+        BlocProvider(
+          create: (context) => FavoriteGalleryBloc(),
         ),
       ],
       child: App(),
