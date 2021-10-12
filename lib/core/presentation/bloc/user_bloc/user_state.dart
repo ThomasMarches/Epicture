@@ -17,5 +17,3 @@ class UserLoadedState extends UserState {
   @override
   List<Object> get props => [user];
 }
-
-class UserLoadingFailureState extends UserState {}

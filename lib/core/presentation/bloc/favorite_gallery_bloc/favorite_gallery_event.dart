@@ -1,10 +1,7 @@
 part of 'favorite_gallery_bloc.dart';
 
-abstract class FavoriteGalleryBlocEvent extends Equatable {
+abstract class FavoriteGalleryBlocEvent {
   const FavoriteGalleryBlocEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class FetchFavoriteGalleryPictureEvent extends FavoriteGalleryBlocEvent {
@@ -13,7 +10,4 @@ class FetchFavoriteGalleryPictureEvent extends FavoriteGalleryBlocEvent {
 
   final String accountUsername;
   final String accessToken;
-
-  @override
-  List<Object> get props => [accountUsername, accessToken];
 }
