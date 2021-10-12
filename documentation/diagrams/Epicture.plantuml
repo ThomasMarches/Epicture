@@ -1,0 +1,482 @@
+@startuml Epicture
+set namespaceSeparator ::
+
+class "epicture::core::utils::assets.dart::Assets" {
+}
+
+class "epicture::core::utils::utils.dart::Utils" {
+  {static} +void moveToImagePage()
+  {static} +void showAlertDialog()
+  {static} +String getTimeDifference()
+  {static} +void showSnackbar()
+}
+
+class "epicture::core::utils::constants.dart::Constants" {
+  {static} +List<Widget> pages
+  {static} +List<Color> epictureTextGradient
+  {static} +String clientId
+  {static} +String baseUrl
+  {static} +String getUserInformationsURL
+  {static} +String uploadImageURL
+  {static} +String getUserImagesURL
+  {static} +String generateAccessTokenURL
+  {static} +String getAccountSettingsURL
+  {static} +String createCommentURL
+  {static} +String getHomePageImages
+  {static} +String loginURL
+  {static} +String commentChangeURL()
+  {static} +String changeAccountSettingsURL()
+  {static} +String voteOnCommentURL()
+  {static} +String getUserFavoriteImagesURL()
+  {static} +String getImageCommentsURL()
+  {static} +String searchImagesURL()
+  {static} +String getFavoriteAnImageURL()
+}
+
+class "epicture::core::data::models::imgur_profile_image.dart::ImgurProfileImage" {
+  +String id
+  +String? title
+  +String? description
+  +DateTime datetime
+  +String type
+  +bool animated
+  +int width
+  +int height
+  +int size
+  +int views
+  +String? vote
+  +bool favorite
+  +String? section
+  +String accountUrl
+  +int accountId
+  +bool isAd
+  +bool inMostViral
+  +bool hasSound
+  +int adType
+  +String adUrl
+  +String edited
+  +bool inGallery
+  +String deletehash
+  +String? name
+  +String link
+}
+
+class "epicture::core::data::models::user_informations.dart::UserInformations" {
+  +String userName
+  +int reputation
+  +String? bio
+  +String reputationName
+  +String? avatar
+}
+
+class "epicture::core::data::models::imgur_favorite_image.dart::ImgurFavoriteImage" {
+  +String id
+  +String? title
+  +String? description
+  +DateTime datetime
+  +String type
+  +bool animated
+  +int width
+  +int height
+  +int size
+  +int views
+  +String? vote
+  +bool favorite
+  +String? section
+  +String accountUrl
+  +int accountId
+  +bool inMostViral
+  +bool hasSound
+  +bool inGallery
+  +String link
+  +String cover
+}
+
+class "epicture::core::data::models::user_model.dart::UserModel" {
+  +String clientId
+  +String biography
+  +String avatarName
+  +String avatarPath
+  +String accessToken
+  +String refreshToken
+  +String accountUsername
+  +String accountId
+  +Map<String, dynamic> toMap()
+  +String toJson()
+}
+
+class "epicture::core::data::models::imgur_comments.dart::ImgurComments" {
+  +int id
+  +int ups
+  +int downs
+  +String? vote
+  +String author
+  +String comment
+  +DateTime datetime
+}
+
+class "epicture::core::data::models::imgur_image.dart::ImgurImages" {
+  +String id
+  +String type
+  +int width
+  +int height
+  +String? vote
+  +bool favorite
+  +String? title
+  +String? description
+  +DateTime datetime
+  +String? section
+  +String link
+}
+
+class "epicture::core::data::sources::imgur_data_source.dart::ImgurDataSource" {
+  {static} +Future<UserInformations?> getUserInformations()
+  {static} +Future<List<ImgurProfileImage>?> getUserImages()
+  {static} +Future<List<ImgurFavoriteImage>?> getUserFavoriteImages()
+  {static} +Future<List<ImgurImages>?> searchForImages()
+  {static} +Future<List<ImgurImages>?> getHomePageImages()
+  {static} +Future<bool> favoriteAnImage()
+  {static} +Future<List<ImgurComments>?> getImageComments()
+  {static} +Future<ImgurComments?> createCommentOnImage()
+  {static} +Future<ImgurComments?> convertIdToComment()
+  {static} +Future<bool> voteOnComment()
+  {static} +Future<bool> deleteComment()
+  {static} +Future<bool> uploadImage()
+  {static} +Future<bool> updateUserInformations()
+}
+
+abstract class "epicture::core::error::failure.dart::Failure" {
+  -List<dynamic> _args
+  +List<Object?> props
+  +String toMessage()
+}
+
+class "epicture::core::error::failure.dart::ServerFailure" {
+  +String? message
+  +List<Object?> props
+}
+
+class "epicture::core::error::failure.dart::CacheFailure" {
+  +String? message
+  +List<Object?> props
+}
+
+class "epicture::core::error::failure.dart::PermissionFailure" {
+  +String message
+  +List<Object> props
+}
+
+class "epicture::core::error::exception.dart::ServerException" {
+  +String? message
+}
+
+"dart::core::Exception" <|-- "epicture::core::error::exception.dart::ServerException"
+
+class "epicture::core::error::exception.dart::CacheException" {
+  +String? message
+}
+
+"dart::core::Exception" <|-- "epicture::core::error::exception.dart::CacheException"
+
+class "epicture::core::error::exception.dart::UserNotFoundException" {
+  +String? message
+}
+
+"dart::core::Exception" <|-- "epicture::core::error::exception.dart::UserNotFoundException"
+
+class "epicture::core::error::exception.dart::TicketNotFoundException" {
+  +String? message
+}
+
+"dart::core::Exception" <|-- "epicture::core::error::exception.dart::TicketNotFoundException"
+
+class "epicture::core::domain::entities::user_entity.dart::UserEntity" {
+  +String accessToken
+  +String refreshToken
+  +String accountUsername
+  +String accountId
+  +List<Object> props
+}
+
+class "epicture::core::presentation::app::app_bloc_observer.dart::AppBlocObserver" {
+  +void onChange()
+  +void onError()
+}
+
+class "epicture::core::presentation::app::app.dart::App" {
+  +ThemeData theme
+  +Widget build()
+}
+
+"epicture::core::presentation::app::app.dart::App" o-- "flutter::src::material::theme_data.dart::ThemeData"
+
+class "epicture::core::presentation::pages::image_page.dart::ImagePageArguments" {
+  +String id
+  +String type
+  +int width
+  +int height
+  +String? vote
+  +bool favorite
+  +String? title
+  +String? description
+  +DateTime datetime
+  +String? section
+  +String link
+}
+
+class "epicture::core::presentation::pages::image_page.dart::ImagePage" {
+  +ImagePageArguments image
+  {static} +String routeName
+  +_ImagePageState createState()
+}
+
+"epicture::core::presentation::pages::image_page.dart::ImagePage" o-- "epicture::core::presentation::pages::image_page.dart::ImagePageArguments"
+
+class "epicture::core::presentation::pages::image_page.dart::_ImagePageState" {
+  +List<ImgurComments>? imageCommentsList
+  -TextEditingController _controller
+  +void initState()
+  +Widget build()
+  -String _getPictureHash()
+}
+
+"epicture::core::presentation::pages::image_page.dart::_ImagePageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+
+class "epicture::core::presentation::pages::image_page.dart::ImageCommentList" {
+  +List<ImgurComments>? imageCommentsList
+  +State<ImageCommentList> createState()
+}
+
+class "epicture::core::presentation::pages::image_page.dart::_ImageCommentListState" {
+  +Widget build()
+  -void _updateImageList()
+}
+
+class "epicture::core::presentation::pages::image_page.dart::SingleCommentWidget" {
+  +List<ImgurComments>? imageCommentsList
+  +void Function(int) updateImageList
+  +int index
+  +State<SingleCommentWidget> createState()
+}
+
+"epicture::core::presentation::pages::image_page.dart::SingleCommentWidget" o-- "null::void Function(int)"
+
+class "epicture::core::presentation::pages::image_page.dart::_SingleCommentWidgetState" {
+  +bool hasUpVoted
+  +bool hasDownVoted
+  +UserLoadedState? state
+  +bool isAuthor
+  +Widget build()
+  -void _deleteComment()
+  -void _setupIsAuthor()
+}
+
+"epicture::core::presentation::pages::image_page.dart::_SingleCommentWidgetState" o-- "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserLoadedState"
+
+class "epicture::core::presentation::pages::upload_body.dart::UploadBody" {
+  +_UploadBodyState createState()
+}
+
+class "epicture::core::presentation::pages::upload_body.dart::_UploadBodyState" {
+  -ImagePicker _picker
+  +File? previewImage
+  +Widget build()
+  -void _removeImageFromBody()
+}
+
+"epicture::core::presentation::pages::upload_body.dart::_UploadBodyState" o-- "image_picker::image_picker.dart::ImagePicker"
+"epicture::core::presentation::pages::upload_body.dart::_UploadBodyState" o-- "dart::io::File"
+
+class "epicture::core::presentation::pages::upload_body.dart::ImagePreview" {
+  +File previewImage
+  +void Function() removeImageCallback
+  +State<ImagePreview> createState()
+}
+
+"epicture::core::presentation::pages::upload_body.dart::ImagePreview" o-- "dart::io::File"
+"epicture::core::presentation::pages::upload_body.dart::ImagePreview" o-- "null::void Function()"
+
+class "epicture::core::presentation::pages::upload_body.dart::_ImagePreviewState" {
+  +String? imageTitle
+  +String? imageDescription
+  +Widget build()
+}
+
+class "epicture::core::presentation::pages::login_page.dart::LoginPage" {
+  {static} +String routeName
+  +_LoginPageState createState()
+}
+
+class "epicture::core::presentation::pages::login_page.dart::_LoginPageState" {
+  +FlutterWebviewPlugin webView
+  +UserEntity? userInformations
+  -BuildContext? _context
+  +void initState()
+  -void _notifyBloc()
+  +Widget build()
+}
+
+"epicture::core::presentation::pages::login_page.dart::_LoginPageState" o-- "flutter_webview_plugin::src::base.dart::FlutterWebviewPlugin"
+"epicture::core::presentation::pages::login_page.dart::_LoginPageState" o-- "epicture::core::domain::entities::user_entity.dart::UserEntity"
+"epicture::core::presentation::pages::login_page.dart::_LoginPageState" o-- "flutter::src::widgets::framework.dart::BuildContext"
+
+class "epicture::core::presentation::pages::profile_body.dart::ProfileBody" {
+  {static} +String routeName
+  +_ProfileBodyState createState()
+}
+
+class "epicture::core::presentation::pages::profile_body.dart::_ProfileBodyState" {
+  +UserInformations? userInformations
+  +List<ImgurProfileImage>? userImagesList
+  +bool isEditing
+  +String? newUsername
+  +String? newDescription
+  +void initState()
+  +Widget build()
+  +Future<void> changeUsernameSettings()
+  -String _getUsername()
+  -String _getReputationName()
+  -String _getBiography()
+  -String _getReputation()
+}
+
+"epicture::core::presentation::pages::profile_body.dart::_ProfileBodyState" o-- "epicture::core::data::models::user_informations.dart::UserInformations"
+
+class "epicture::core::presentation::pages::home_page.dart::HomePage" {
+  {static} +String routeName
+  +_HomePageState createState()
+}
+
+class "epicture::core::presentation::pages::home_page.dart::_HomePageState" {
+  +int selectedIndex
+  +Widget build()
+  -void _updateWidget()
+}
+
+class "epicture::core::presentation::pages::home_page.dart::EpictureBottomAppBar" {
+  +int selectedIndex
+  +dynamic Function(int) updateCallback
+  +_EpictureBottomAppBarState createState()
+}
+
+"epicture::core::presentation::pages::home_page.dart::EpictureBottomAppBar" o-- "null::dynamic Function(int)"
+
+class "epicture::core::presentation::pages::home_page.dart::_EpictureBottomAppBarState" {
+  +List<BottomNavigationBarItem> bottomNavigationBarItemList
+  +Widget build()
+  -void _onItemTapped()
+}
+
+class "epicture::core::presentation::pages::search_body.dart::SearchBody" {
+  {static} +String routeName
+  +_SearchBodyState createState()
+}
+
+class "epicture::core::presentation::pages::search_body.dart::_SearchBodyState" {
+  +List<ImgurImages>? userAssociatedImageList
+  +bool hasRequested
+  +Widget build()
+}
+
+class "epicture::core::presentation::pages::favorite_body.dart::FavoriteBody" {
+  {static} +String routeName
+  +_FavoriteBodyState createState()
+}
+
+class "epicture::core::presentation::pages::favorite_body.dart::_FavoriteBodyState" {
+  +List<ImgurFavoriteImage>? userFavoriteImagesList
+  +List<bool>? userLikedPictures
+  +void initState()
+  +Widget build()
+}
+
+class "epicture::core::presentation::pages::home_body.dart::HomeBody" {
+  {static} +String routeName
+  +_HomeBodyState createState()
+}
+
+class "epicture::core::presentation::pages::home_body.dart::_HomeBodyState" {
+  +List<ImgurImages>? homePageImagesList
+  +List<bool>? userLikedPictures
+  +void initState()
+  +Widget build()
+  -String _getPictureHash()
+}
+
+class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::ProfileGalleryBloc" {
+  +Stream<ProfileGalleryBlocState> mapEventToState()
+  -Stream<ProfileGalleryBlocState> _fetchProfileGalleryPictureEventToState()
+}
+
+abstract class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::ProfileGalleryBlocEvent" {
+  +List<Object> props
+}
+
+class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::FetchProfileGalleryPictureEvent" {
+  +String accessToken
+  +List<Object> props
+}
+
+abstract class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::ProfileGalleryBlocState" {
+  +List<Object> props
+}
+
+class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::ProfileGalleryBlocInitialState" {
+}
+
+class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::FetchProfileGalleryPictureLoading" {
+}
+
+class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::FetchProfileGalleryPictureFailure" {
+}
+
+class "epicture::core::presentation::bloc::profile_gallery_bloc::profile_gallery_bloc.dart::FetchProfileGalleryPictureSuccess" {
+  +List<ImgurProfileImage>? userImagesList
+}
+
+class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserBloc" {
+  +Stream<UserState> mapEventToState()
+}
+
+abstract class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserEvent" {
+  +List<Object> props
+}
+
+class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::FetchUserInformationsEvent" {
+  +UserEntity user
+  +List<Object> props
+}
+
+"epicture::core::presentation::bloc::user_bloc::user_bloc.dart::FetchUserInformationsEvent" o-- "epicture::core::domain::entities::user_entity.dart::UserEntity"
+
+abstract class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserState" {
+  +List<Object> props
+}
+
+class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserInitialState" {
+}
+
+class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserLoadedState" {
+  +UserEntity user
+  +List<Object> props
+}
+
+"epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserLoadedState" o-- "epicture::core::domain::entities::user_entity.dart::UserEntity"
+
+class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserLoadingFailureState" {
+}
+
+class "epicture::core::presentation::router::app_router.dart::AppRouter" {
+  +Route<dynamic>? onGenerateRoute()
+}
+
+abstract class "epicture::core::usecases::usecase.dart::UseCase" {
+  +Future<Either<Failure, Type>> call()
+}
+
+class "epicture::core::usecases::usecase.dart::NoParams" {
+  +List<Object> props
+}
+
+
+@enduml
