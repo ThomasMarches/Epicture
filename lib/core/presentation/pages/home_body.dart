@@ -72,17 +72,7 @@ class _HomeBodyState extends State<HomeBody> {
                             InkWell(
                               onTap: () {
                                 Utils.moveToImagePage(
-                                  homePageImagesList![index].id,
-                                  homePageImagesList![index].author,
-                                  homePageImagesList![index].type,
-                                  homePageImagesList![index].width,
-                                  homePageImagesList![index].height,
-                                  homePageImagesList![index].vote,
-                                  homePageImagesList![index].favorite,
-                                  homePageImagesList![index].title,
-                                  homePageImagesList![index].description,
-                                  homePageImagesList![index].datetime,
-                                  homePageImagesList![index].link,
+                                  homePageImagesList![index],
                                   context,
                                 );
                               },

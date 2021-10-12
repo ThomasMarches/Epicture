@@ -1,4 +1,5 @@
 import 'package:epicture/core/data/models/imgur_comments.dart';
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
@@ -10,30 +11,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ImagePageArguments {
   const ImagePageArguments({
-    required this.id,
-    required this.author,
-    required this.title,
-    required this.vote,
-    required this.width,
-    required this.height,
-    required this.favorite,
-    required this.type,
-    required this.description,
-    required this.datetime,
-    required this.link,
+    required this.image,
   });
 
-  final String id;
-  final String? author;
-  final String type;
-  final int width;
-  final int height;
-  final String? vote;
-  final bool favorite;
-  final String? title;
-  final String? description;
-  final DateTime datetime;
-  final String link;
+  final ImgurImages image;
 }
 
 //TODO: impletement image description
@@ -60,7 +41,7 @@ class _ImagePageState extends State<ImagePage> {
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.image.favorite;
+    isFavorite = widget.image.image.favorite;
     if (widget.commentsList != null) {
       setState(
         () {
@@ -69,7 +50,7 @@ class _ImagePageState extends State<ImagePage> {
       );
       return;
     }
-    ImgurDataSource.getImageComments(context, widget.image.id).then(
+    ImgurDataSource.getImageComments(context, widget.image.image.id).then(
       (value) => setState(
         () {
           imageCommentsList = value;
@@ -83,8 +64,8 @@ class _ImagePageState extends State<ImagePage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          if (widget.image.author != null &&
-              widget.image.author == _getUserUsername(context))
+          if (widget.image.image.author != null &&
+              widget.image.image.author == _getUserUsername(context))
             IconButton(
               onPressed: () {
                 showModalSheet(context);
@@ -133,7 +114,9 @@ class _ImagePageState extends State<ImagePage> {
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
                   child: Center(
                     child: Text(
-                      widget.image.title == null ? '' : widget.image.title!,
+                      widget.image.image.title == null
+                          ? ''
+                          : widget.image.image.title!,
                       style: const TextStyle(fontSize: 15),
                     ),
                   ),
@@ -142,13 +125,13 @@ class _ImagePageState extends State<ImagePage> {
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     image: DecorationImage(
-                      image: Image.network(widget.image.link).image,
+                      image: Image.network(widget.image.image.link).image,
                       fit: BoxFit.fill,
                     ),
                   ),
                   margin: const EdgeInsets.all(5),
                   width: MediaQuery.of(context).size.width - 50,
-                  height: widget.image.height.toDouble(),
+                  height: widget.image.image.height.toDouble(),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -161,7 +144,9 @@ class _ImagePageState extends State<ImagePage> {
                       ),
                     ),
                     Text(
-                      widget.image.vote == null ? '' : widget.image.vote!,
+                      widget.image.image.vote == null
+                          ? ''
+                          : widget.image.image.vote!,
                     ),
                     const Spacer(),
                     IconButton(
@@ -176,7 +161,7 @@ class _ImagePageState extends State<ImagePage> {
                       onPressed: () async {
                         await ImgurDataSource.favoriteAnImage(
                           context,
-                          widget.image.id,
+                          widget.image.image.id,
                         ).then((value) {
                           if (value == true) {
                             setState(() {
@@ -203,7 +188,7 @@ class _ImagePageState extends State<ImagePage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                      'Uploaded: ${Utils.getTimeDifference(widget.image.datetime)}'),
+                      'Uploaded: ${Utils.getTimeDifference(widget.image.image.datetime)}'),
                 ),
                 Column(
                   children: [
@@ -215,7 +200,7 @@ class _ImagePageState extends State<ImagePage> {
                           _controller.clear();
                           await ImgurDataSource.createCommentOnImage(
                             context,
-                            widget.image.id,
+                            widget.image.image.id,
                             comment,
                           ).then((value) {
                             if (value != null) {
@@ -274,7 +259,8 @@ class _ImagePageState extends State<ImagePage> {
                   leading: const Icon(Icons.delete),
                   title: const Text('Delete picture'),
                   onTap: () async {
-                    await ImgurDataSource.deleteImage(context, widget.image.id)
+                    await ImgurDataSource.deleteImage(
+                            context, widget.image.image.id)
                         .then((value) {
                       if (value == true) {
                         _notifyProfileGalleryBloc(context);

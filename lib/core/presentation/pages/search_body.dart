@@ -71,17 +71,7 @@ class _SearchBodyState extends State<SearchBody> {
                         child: InkWell(
                           onTap: () {
                             Utils.moveToImagePage(
-                              userAssociatedImageList![index].id,
-                              userAssociatedImageList![index].author,
-                              userAssociatedImageList![index].type,
-                              userAssociatedImageList![index].width,
-                              userAssociatedImageList![index].height,
-                              userAssociatedImageList![index].vote,
-                              userAssociatedImageList![index].favorite,
-                              userAssociatedImageList![index].title,
-                              userAssociatedImageList![index].description,
-                              userAssociatedImageList![index].datetime,
-                              userAssociatedImageList![index].link,
+                              userAssociatedImageList![index],
                               context,
                             );
                           },

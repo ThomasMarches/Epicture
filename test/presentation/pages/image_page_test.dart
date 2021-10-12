@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:epicture/core/data/models/imgur_comments.dart';
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/domain/entities/user_entity.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/presentation/pages/image_page.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
-final image = ImagePageArguments(
+final image = ImgurImages(
   id: 'CiTPwEY',
   author: null,
   type: 'jpeg',
@@ -29,7 +30,8 @@ void main() {
   group('ImagePage', () {
     testWidgets('renders an image without comment', (tester) async {
       mockNetworkImagesFor(() async {
-        await tester.pumpWidget(MaterialApp(home: ImagePage(image: image)));
+        await tester.pumpWidget(MaterialApp(
+            home: ImagePage(image: ImagePageArguments(image: image))));
       }).then((value) {
         expect(find.byType(ImagePage), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
@@ -76,7 +78,7 @@ void main() {
           create: (context) => userBloc,
           child: MaterialApp(
             home: ImagePage(
-              image: image,
+              image: ImagePageArguments(image: image),
               commentsList: commentsList,
             ),
           ),

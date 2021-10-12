@@ -198,17 +198,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                       return InkWell(
                         onTap: () {
                           Utils.moveToImagePage(
-                            userImagesList![index].id,
-                            userImagesList![index].author,
-                            userImagesList![index].type,
-                            userImagesList![index].width,
-                            userImagesList![index].height,
-                            userImagesList![index].vote,
-                            userImagesList![index].favorite,
-                            userImagesList![index].title,
-                            userImagesList![index].description,
-                            userImagesList![index].datetime,
-                            userImagesList![index].link,
+                            userImagesList![index],
                             context,
                           );
                         },

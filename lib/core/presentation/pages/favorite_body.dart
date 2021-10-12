@@ -67,17 +67,7 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                           child: InkWell(
                             onTap: () {
                               Utils.moveToImagePage(
-                                userFavoriteImagesList![index].id,
-                                userFavoriteImagesList![index].author,
-                                userFavoriteImagesList![index].type,
-                                userFavoriteImagesList![index].width,
-                                userFavoriteImagesList![index].height,
-                                userFavoriteImagesList![index].vote,
-                                userFavoriteImagesList![index].favorite,
-                                userFavoriteImagesList![index].title,
-                                userFavoriteImagesList![index].description,
-                                userFavoriteImagesList![index].datetime,
-                                userFavoriteImagesList![index].link,
+                                userFavoriteImagesList![index],
                                 context,
                               );
                             },

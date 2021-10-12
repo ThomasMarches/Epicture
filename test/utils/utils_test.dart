@@ -1,3 +1,4 @@
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/domain/entities/user_entity.dart';
 import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
@@ -16,6 +17,20 @@ import 'package:network_image_mock/network_image_mock.dart';
 class MockBuildContext extends Mock implements BuildContext {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+final image = ImgurImages(
+  id: 'CiTPwEY',
+  author: null,
+  type: 'jpeg',
+  width: 480,
+  height: 360,
+  vote: 'up',
+  favorite: true,
+  title: 'TestTitle',
+  description: 'A simple description',
+  datetime: DateTime.now(),
+  link: 'https://i.imgur.com/jUOQtxg.jpeg',
+);
 
 void main() {
   group('Utils tests', () {
@@ -207,8 +222,7 @@ void main() {
         ),
       );
 
-      Utils.moveToImagePage('', null, '', 0, 0, null, false, null, null,
-          DateTime.now(), 'https://i.imgur.com/jUOQtxg.jpeg', _context!);
+      Utils.moveToImagePage(image, _context!);
       await widgetTester.pumpAndSettle();
       expect(find.byType(ImagePage), findsOneWidget);
     });
