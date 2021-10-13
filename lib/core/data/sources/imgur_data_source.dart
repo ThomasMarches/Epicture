@@ -448,8 +448,8 @@ class ImgurDataSource {
     try {
       if (userInformations == null) return false;
 
-      final accessToken = _getUserAccessTokenFromBloc(context);
       final accountUsername = _getUserUsernameFromBloc(context);
+      final accessToken = _getUserAccessTokenFromBloc(context);
       final response = await http.put(
         Uri.parse(Constants.changeAccountSettingsURL(accountUsername)),
         headers: {'Authorization': 'Bearer $accessToken'},
