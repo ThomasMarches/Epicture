@@ -1,10 +1,7 @@
 part of 'profile_gallery_bloc.dart';
 
-abstract class ProfileGalleryBlocState extends Equatable {
+abstract class ProfileGalleryBlocState {
   const ProfileGalleryBlocState();
-
-  @override
-  List<Object> get props => [];
 }
 
 class ProfileGalleryBlocInitialState extends ProfileGalleryBlocState {}
@@ -18,5 +15,5 @@ class FetchProfileGalleryPictureSuccess extends ProfileGalleryBlocState {
     this.userImagesList,
   });
 
-  final List<ImgurProfileImage>? userImagesList;
+  final List<ImgurImages>? userImagesList;
 }

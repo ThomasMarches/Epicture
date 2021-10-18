@@ -1,10 +1,7 @@
 part of 'favorite_gallery_bloc.dart';
 
-abstract class FavoriteGalleryBlocState extends Equatable {
+abstract class FavoriteGalleryBlocState {
   const FavoriteGalleryBlocState();
-
-  @override
-  List<Object> get props => [];
 }
 
 class FavoriteGalleryBlocInitialState extends FavoriteGalleryBlocState {}
@@ -18,5 +15,5 @@ class FetchFavoriteGalleryPictureSuccess extends FavoriteGalleryBlocState {
     this.userFavoriteImageList,
   });
 
-  final List<ImgurFavoriteImage>? userFavoriteImageList;
+  final List<ImgurImages>? userFavoriteImageList;
 }

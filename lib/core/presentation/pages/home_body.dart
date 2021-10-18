@@ -8,7 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // import '../../../l10n/l10n.dart';
 
 class HomeBody extends StatefulWidget {
-  const HomeBody({Key? key}) : super(key: key);
+  const HomeBody({Key? key, this.homePageImagesList}) : super(key: key);
+
+  final List<ImgurImages>? homePageImagesList;
 
   @override
   _HomeBodyState createState() => _HomeBodyState();
@@ -21,16 +23,19 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   void initState() {
     super.initState();
-    ImgurDataSource.getHomePageImages(context).then(
-      (homePageImages) => setState(
-        () {
-          homePageImagesList = homePageImages;
-          if (homePageImagesList == null) return;
-          userLikedPictures = List.generate(homePageImagesList!.length,
-              (index) => homePageImagesList![index].favorite);
-        },
-      ),
-    );
+    _setupHomePageImagesList();
+  }
+
+  void _setupHomePageImagesList() async {
+    homePageImagesList = (widget.homePageImagesList == null)
+        ? await ImgurDataSource.getHomePageImages(context)
+        : widget.homePageImagesList;
+    if (homePageImagesList != null) {
+      userLikedPictures = List.generate(
+        homePageImagesList!.length,
+        (index) => homePageImagesList![index].favorite,
+      );
+    }
   }
 
   @override
@@ -70,18 +75,7 @@ class _HomeBodyState extends State<HomeBody> {
                             InkWell(
                               onTap: () {
                                 Utils.moveToImagePage(
-                                  homePageImagesList![index].id,
-                                  homePageImagesList![index].author,
-                                  homePageImagesList![index].type,
-                                  homePageImagesList![index].width,
-                                  homePageImagesList![index].height,
-                                  homePageImagesList![index].vote,
-                                  homePageImagesList![index].favorite,
-                                  homePageImagesList![index].title,
-                                  homePageImagesList![index].description,
-                                  homePageImagesList![index].datetime,
-                                  homePageImagesList![index].section,
-                                  homePageImagesList![index].link,
+                                  homePageImagesList![index],
                                   context,
                                 );
                               },
@@ -175,14 +169,13 @@ class _HomeBodyState extends State<HomeBody> {
   }
 
   void _notifyFavoriteGalleryBloc(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    if (userBloc.state is UserLoadedState) {
-      final state = userBloc.state as UserLoadedState;
-      BlocProvider.of<FavoriteGalleryBloc>(context).add(
-        FetchFavoriteGalleryPictureEvent(
-            accessToken: state.user.accessToken,
-            accountUsername: state.user.accountUsername),
-      );
-    }
+    final userBlocState =
+        BlocProvider.of<UserBloc>(context).state as UserLoadedState;
+    BlocProvider.of<FavoriteGalleryBloc>(context).add(
+      FetchFavoriteGalleryPictureEvent(
+        accessToken: userBlocState.user.accessToken,
+        accountUsername: userBlocState.user.accountUsername,
+      ),
+    );
   }
 }

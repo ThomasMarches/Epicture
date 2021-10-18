@@ -10,11 +10,13 @@ class ImgurImages {
     required this.type,
     required this.description,
     required this.datetime,
-    required this.section,
     required this.link,
   });
 
   factory ImgurImages.fromMap(Map<String, dynamic> map) {
+    final link = map['link'] as String;
+    final type = map['type'].toString().substring(6);
+
     return ImgurImages(
       id: map['id'] as String,
       author: map['account_url'] as String?,
@@ -27,8 +29,9 @@ class ImgurImages {
       description: map['description'] as String?,
       datetime:
           DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
-      section: map['section'] as String?,
-      link: map['link'] as String,
+      link: (link.contains('/gallery/'))
+          ? 'https://i.imgur.com/${map['cover']}.$type'
+          : link,
     );
   }
 
@@ -42,6 +45,5 @@ class ImgurImages {
   final String? title;
   final String? description;
   final DateTime datetime;
-  final String? section;
   final String link;
 }

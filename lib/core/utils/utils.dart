@@ -1,51 +1,31 @@
+import 'package:epicture/core/data/models/imgur_image.dart';
 import 'package:epicture/core/presentation/pages/image_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
   static void moveToImagePage(
-    String id,
-    String? author,
-    String type,
-    int width,
-    int height,
-    String? vote,
-    bool favorite,
-    String? title,
-    String? description,
-    DateTime datetime,
-    String? section,
-    String link,
+    ImgurImages image,
     BuildContext context,
   ) {
     Navigator.of(context).pushNamed(ImagePage.routeName,
         arguments: ImagePageArguments(
-          section: section,
-          id: id,
-          author: author,
-          title: title,
-          vote: vote,
-          width: width,
-          height: height,
-          favorite: favorite,
-          type: type,
-          description: description,
-          link: link,
-          datetime: datetime,
+          image: image,
         ));
   }
 
   static void showAlertDialog(
     BuildContext context,
     void Function() onConfirmCallback,
+    String title,
+    String message,
   ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Confirm delete"),
-          content: const Text(
-              "Would you like to continue and delete your comment ?"),
+          title: Text(title),
+          content: Text(message),
           actions: [
             TextButton(
               child: const Text("Cancel"),
