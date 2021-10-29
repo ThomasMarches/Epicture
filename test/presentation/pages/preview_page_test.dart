@@ -2,28 +2,31 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:epicture/core/data/models/imgur_comments.dart';
-import 'package:epicture/core/data/models/imgur_image.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/domain/entities/user_entity.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:epicture/core/presentation/pages/image_page.dart';
+import 'package:epicture/core/presentation/pages/preview_page.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
-final image = ImgurImages(
+final image = ImgurPost(
   id: 'CiTPwEY',
   author: null,
+  content: [],
+  isAlbum: false,
   type: 'jpeg',
-  width: 480,
-  height: 360,
   vote: 'up',
   favorite: true,
   title: 'TestTitle',
   description: 'A simple description',
   datetime: DateTime.now(),
   link: 'https://i.imgur.com/jUOQtxg.jpeg',
+  views: 10,
+  downs: 0,
+  ups: 0,
 );
 
 void main() {
@@ -31,9 +34,9 @@ void main() {
     testWidgets('renders an image without comment', (tester) async {
       mockNetworkImagesFor(() async {
         await tester.pumpWidget(MaterialApp(
-            home: ImagePage(image: ImagePageArguments(image: image))));
+            home: PreviewPage(arguments: PreviewPageArguments(post: image))));
       }).then((value) {
-        expect(find.byType(ImagePage), findsOneWidget);
+        expect(find.byType(PreviewPage), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
         expect(find.byIcon(Icons.keyboard_arrow_left), findsOneWidget);
         expect(find.text('Epicture'), findsOneWidget);
@@ -77,8 +80,8 @@ void main() {
         await tester.pumpWidget(BlocProvider(
           create: (context) => userBloc,
           child: MaterialApp(
-            home: ImagePage(
-              image: ImagePageArguments(image: image),
+            home: PreviewPage(
+              arguments: PreviewPageArguments(post: image),
               commentsList: commentsList,
             ),
           ),

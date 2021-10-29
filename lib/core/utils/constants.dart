@@ -29,9 +29,9 @@ class Constants {
 
   static const getUserInformationsURL = '$baseUrl/account/';
 
-  static const uploadImageURL = '$baseUrl/upload/';
+  static const uploadPostURL = '$baseUrl/upload/';
 
-  static const getUserImagesURL = '$baseUrl/account/me/images';
+  static const getUserPostURL = '$baseUrl/account/me/images';
 
   static const generateAccessTokenURL = 'https://api.imgur.com/oauth2/token';
 
@@ -43,7 +43,7 @@ class Constants {
     return '$baseUrl/comment/$commentId';
   }
 
-  static String deleteImageURL(String imageId) {
+  static String deletePostURL(String imageId) {
     return '$baseUrl/image/$imageId';
   }
 
@@ -51,29 +51,34 @@ class Constants {
     return '$baseUrl/account/$username/settings';
   }
 
+  static String getGalleryInformationURL(String galleryHash) {
+    return '$baseUrl/gallery/album/$galleryHash';
+  }
+
   static String voteOnCommentURL(String commentId, String vote) {
     return '$baseUrl/comment/$commentId/vote/$vote';
   }
 
-  static const getHomePageImages =
+  static const getHomePagePosts =
       '$baseUrl/gallery/hot/viral/top/1?showViral=true&mature=false&album_previews=false';
 
-  static String getUserFavoriteImagesURL(String username) {
+  static String userFavoritePostsURL(String username) {
     return '$baseUrl/account/$username/favorites/';
   }
 
-  static String getImageCommentsURL(String imageID) {
+  static String getPostCommentsURL(String imageID) {
     return '$baseUrl/gallery/$imageID/comments/';
   }
 
-  static String searchImagesURL(String? tag) {
-    return tag == null
-        ? '$baseUrl/gallery/search/'
-        : '$baseUrl/gallery/search/time/all/1?q_all=$tag&q_type=jgp&q_type=png';
+  static String searchPostURL(String? tag, String sort, String window) {
+    if (tag == null) {
+      return '$baseUrl/gallery/search/';
+    }
+    return '$baseUrl/gallery/search/$sort/$window/1?q_all=$tag&q_type=jgp&q_type=png';
   }
 
-  static String getFavoriteAnImageURL(String hash) {
-    return '$baseUrl/image/$hash/favorite';
+  static String getFavoriteAPostURL(String hash) {
+    return '$baseUrl/album/$hash/favorite';
   }
 
   static const loginURL =

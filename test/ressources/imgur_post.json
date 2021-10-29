@@ -7,6 +7,7 @@
     "type": "image/jpeg",
     "favorite": false,
     "animated": false,
+    "is_album": false,
     "width": 2559,
     "height": 1439,
     "size": 521916,

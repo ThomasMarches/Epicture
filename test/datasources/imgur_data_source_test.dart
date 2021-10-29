@@ -67,7 +67,7 @@ void main() {
       ));
 
       expect(
-        await ImgurDataSource.deleteImage(
+        await ImgurDataSource.deletePost(
           _context!,
           'imageId',
         ),
@@ -91,8 +91,10 @@ void main() {
       ));
 
       expect(
-        await ImgurDataSource.searchForImages(
+        await ImgurDataSource.searchForPosts(
           'testTag',
+          'time',
+          'all',
         ),
         null,
       );
@@ -119,7 +121,7 @@ void main() {
       ));
 
       expect(
-        await ImgurDataSource.favoriteAnImage(
+        await ImgurDataSource.favoriteAPost(
           _context!,
           'testTag',
         ),
@@ -148,7 +150,7 @@ void main() {
       ));
 
       expect(
-        await ImgurDataSource.getImageComments(
+        await ImgurDataSource.getPostComments(
           _context!,
           'testId',
         ),

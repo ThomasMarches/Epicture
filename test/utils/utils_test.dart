@@ -1,10 +1,10 @@
-import 'package:epicture/core/data/models/imgur_image.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/domain/entities/user_entity.dart';
 import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/presentation/pages/home_page.dart';
-import 'package:epicture/core/presentation/pages/image_page.dart';
+import 'package:epicture/core/presentation/pages/preview_page.dart';
 import 'package:epicture/core/presentation/router/app_router.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -18,18 +18,21 @@ class MockBuildContext extends Mock implements BuildContext {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-final image = ImgurImages(
+final image = ImgurPost(
   id: 'CiTPwEY',
   author: null,
   type: 'jpeg',
-  width: 480,
-  height: 360,
+  content: [],
+  isAlbum: false,
   vote: 'up',
   favorite: true,
   title: 'TestTitle',
   description: 'A simple description',
   datetime: DateTime.now(),
   link: 'https://i.imgur.com/jUOQtxg.jpeg',
+  views: 10,
+  downs: 0,
+  ups: 0,
 );
 
 void main() {
@@ -222,9 +225,9 @@ void main() {
         ),
       );
 
-      Utils.moveToImagePage(image, _context!);
+      Utils.moveToPreviewPage(image, _context!);
       await widgetTester.pumpAndSettle();
-      expect(find.byType(ImagePage), findsOneWidget);
+      expect(find.byType(PreviewPage), findsOneWidget);
     });
   });
 }

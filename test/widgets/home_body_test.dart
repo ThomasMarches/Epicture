@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:epicture/core/data/models/imgur_image.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/domain/entities/user_entity.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:epicture/core/presentation/pages/home_body.dart';
@@ -26,14 +26,14 @@ void main() {
 
     testWidgets('renders HomeBody with pictures', (tester) async {
       final file =
-          File('test/ressources/imgur_images_list.json').readAsStringSync();
+          File('test/ressources/imgur_post_list.json').readAsStringSync();
 
       final jsonResponse = jsonDecode(file);
       final jsonData = jsonResponse['data'];
 
-      final imageList = List<ImgurImages>.from(
-        jsonData.map<ImgurImages>(
-          (model) => ImgurImages.fromMap(model),
+      final imageList = List<ImgurPost>.from(
+        jsonData.map<ImgurPost>(
+          (model) => ImgurPost.fromMap(model),
         ),
       );
 
@@ -50,7 +50,7 @@ void main() {
           create: (context) => userBloc,
           child: MaterialApp(
             home: HomeBody(
-              homePageImagesList: imageList,
+              homePagePostList: imageList,
             ),
           ),
         ));

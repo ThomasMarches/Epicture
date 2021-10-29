@@ -12,8 +12,8 @@ class FetchFavoriteGalleryPictureFailure extends FavoriteGalleryBlocState {}
 
 class FetchFavoriteGalleryPictureSuccess extends FavoriteGalleryBlocState {
   const FetchFavoriteGalleryPictureSuccess({
-    this.userFavoriteImageList,
+    this.userFavoritePostList,
   });
 
-  final List<ImgurImages>? userFavoriteImageList;
+  final List<ImgurPost>? userFavoritePostList;
 }
