@@ -14,7 +14,7 @@ import 'package:network_image_mock/network_image_mock.dart';
 
 final image = ImgurPost(
   id: 'CiTPwEY',
-  author: null,
+  author: 'TestAuthor',
   content: [],
   isAlbum: false,
   type: 'jpeg',
@@ -35,16 +35,17 @@ void main() {
     testWidgets('renders an image without comment', (tester) async {
       mockNetworkImagesFor(() async {
         await tester.pumpWidget(MaterialApp(
-            home: PreviewPage(arguments: PreviewPageArguments(post: image))));
+            home: PreviewPage(
+          arguments: PreviewPageArguments(post: image),
+          commentsList: const [],
+        )));
       }).then((value) {
         expect(find.byType(PreviewPage), findsOneWidget);
-        expect(find.byType(Scaffold), findsOneWidget);
         expect(find.byIcon(Icons.keyboard_arrow_left), findsOneWidget);
         expect(find.text('Epicture'), findsOneWidget);
         expect(find.text(image.title!), findsOneWidget);
         expect(
-            find.text('Uploaded: ${Utils.getTimeDifference(DateTime.now())}'),
-            findsOneWidget);
+            find.text(Utils.getTimeDifference(DateTime.now())), findsOneWidget);
         expect(find.byIcon(Icons.favorite), findsOneWidget);
         expect(find.byType(TextField), findsOneWidget);
         expect(find.text('No comment yet.'), findsOneWidget);
