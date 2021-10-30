@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/widgets/drop_down_menu.dart';
@@ -103,13 +104,19 @@ class _SearchBodyState extends State<SearchBody> {
                           },
                           child: Container(
                             padding: const EdgeInsets.all(2),
-                            child: Center(
-                              child: Image(
-                                  image: Image.network(
-                                          userAssociatedPostList![index].link)
-                                      .image,
-                                  fit: BoxFit.contain),
-                            ),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                (userAssociatedPostList![index].isAlbum ==
+                                            true &&
+                                        userAssociatedPostList![index]
+                                            .content
+                                            .isNotEmpty)
+                                    ? userAssociatedPostList![index].content[0]
+                                    : userAssociatedPostList![index].link,
+                              ),
+                              fit: BoxFit.fill,
+                            )),
                           ),
                         ),
                       ),

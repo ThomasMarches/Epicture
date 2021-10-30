@@ -209,6 +209,30 @@ class ImgurDataSource {
     return false;
   }
 
+  static Future<bool> voteForAlbum(
+    BuildContext context,
+    String galleryHash,
+    String vote,
+  ) async {
+    try {
+      final accessToken = _getUserAccessTokenFromBloc(context);
+      final response = await http.post(
+        Uri.parse(Constants.voteForAlbumURL(galleryHash, vote)),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception(
+            'Error from API call GET ${Constants.voteForAlbumURL(galleryHash, vote)}.  Error code: ${response.statusCode}');
+      }
+
+      return true;
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
   static Future<List<ImgurComments>?> getPostComments(
     BuildContext context,
     String id,

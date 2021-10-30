@@ -38,11 +38,13 @@ class _PreviewPageState extends State<PreviewPage> {
   List<ImgurComments>? commentsList;
   final _controller = TextEditingController();
   var isFavorite = false;
+  String? vote;
 
   @override
   void initState() {
     super.initState();
     isFavorite = widget.arguments.post.favorite;
+    vote = widget.arguments.post.vote;
     if (widget.commentsList != null) {
       setState(
         () {
@@ -66,10 +68,10 @@ class _PreviewPageState extends State<PreviewPage> {
       appBar: AppBar(
         actions: [
           if (widget.arguments.post.author != null &&
-              widget.arguments.post.author == _getUserUsername(context))
+              widget.arguments.post.author == _getUserUsername())
             IconButton(
               onPressed: () {
-                showModalSheet(context);
+                showModalSheet();
               },
               icon: const Icon(
                 Icons.more_vert,
@@ -129,22 +131,40 @@ class _PreviewPageState extends State<PreviewPage> {
                     if (widget.arguments.post.ups != null)
                       Text(widget.arguments.post.ups!.toString()),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
+                      onPressed: () async {
+                        await _voteForImage(vote, 'up').then((value) {
+                          if (value) {
+                            setState(() {
+                              vote = 'up';
+                            });
+                          }
+                        });
+                      },
+                      icon: Icon(
                         Icons.arrow_upward_sharp,
-                        color: Colors.grey,
+                        color: (vote != null && vote == 'up')
+                            ? Colors.red
+                            : Colors.grey[600],
                       ),
                     ),
-                    if (widget.arguments.post.vote != null)
-                      Text(widget.arguments.post.vote!),
                     const Spacer(),
                     if (widget.arguments.post.downs != null)
                       Text(widget.arguments.post.downs!.toString()),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _voteForImage(vote, 'down').then((value) {
+                          if (value) {
+                            setState(() {
+                              vote = 'down';
+                            });
+                          }
+                        });
+                      },
                       icon: Icon(
                         Icons.arrow_downward_sharp,
-                        color: Colors.grey[600],
+                        color: (vote != null && vote == 'down')
+                            ? Colors.red
+                            : Colors.grey[600],
                       ),
                     ),
                     const Spacer(),
@@ -167,7 +187,7 @@ class _PreviewPageState extends State<PreviewPage> {
                             setState(() {
                               isFavorite = !isFavorite;
                             });
-                            _notifyFavoriteGalleryBloc(context);
+                            _notifyFavoriteGalleryBloc();
                           } else {
                             Utils.showSnackbar(
                               context,
@@ -250,7 +270,15 @@ class _PreviewPageState extends State<PreviewPage> {
     );
   }
 
-  Future<dynamic> showModalSheet(BuildContext context) {
+  Future<bool> _voteForImage(String? actualVote, String newVote) async {
+    return await ImgurDataSource.voteForAlbum(
+      context,
+      widget.arguments.post.id,
+      (actualVote != null && actualVote == newVote) ? 'veto' : newVote,
+    );
+  }
+
+  Future<dynamic> showModalSheet() {
     return showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -275,7 +303,7 @@ class _PreviewPageState extends State<PreviewPage> {
                             context, widget.arguments.post.id)
                         .then((value) {
                       if (value == true) {
-                        _notifyProfileGalleryBloc(context);
+                        _notifyProfileGalleryBloc();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       } else {
@@ -309,7 +337,7 @@ class _PreviewPageState extends State<PreviewPage> {
         });
   }
 
-  void _notifyFavoriteGalleryBloc(BuildContext context) {
+  void _notifyFavoriteGalleryBloc() {
     final userBlocState =
         BlocProvider.of<UserBloc>(context).state as UserLoadedState;
     BlocProvider.of<FavoriteGalleryBloc>(context).add(
@@ -320,7 +348,7 @@ class _PreviewPageState extends State<PreviewPage> {
     );
   }
 
-  void _notifyProfileGalleryBloc(BuildContext context) {
+  void _notifyProfileGalleryBloc() {
     final userBlocState =
         BlocProvider.of<UserBloc>(context).state as UserLoadedState;
     BlocProvider.of<ProfileGalleryBloc>(context).add(
@@ -330,7 +358,7 @@ class _PreviewPageState extends State<PreviewPage> {
     );
   }
 
-  String _getUserUsername(BuildContext context) {
+  String _getUserUsername() {
     final userBlocState =
         BlocProvider.of<UserBloc>(context).state as UserLoadedState;
     return userBlocState.user.accountUsername;

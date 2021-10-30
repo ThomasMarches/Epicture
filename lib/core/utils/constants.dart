@@ -43,8 +43,12 @@ class Constants {
     return '$baseUrl/comment/$commentId';
   }
 
-  static String deletePostURL(String imageId) {
-    return '$baseUrl/image/$imageId';
+  static String deletePostURL(String postId) {
+    return '$baseUrl/image/$postId';
+  }
+
+  static String voteForAlbumURL(String galleryHash, String vote) {
+    return '$baseUrl/gallery/$galleryHash/vote/$vote';
   }
 
   static String changeAccountSettingsURL(String username) {
