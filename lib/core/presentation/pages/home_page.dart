@@ -120,8 +120,8 @@ class _EpictureBottomAppBarState extends State<EpictureBottomAppBar> {
         label: '',
       ),
       BottomNavigationBarItem(
-        activeIcon: Icon(Icons.contact_page),
-        icon: Icon(Icons.contact_page_outlined),
+        activeIcon: Icon(Icons.account_circle),
+        icon: Icon(Icons.account_circle_outlined),
         label: '',
       ),
     ];

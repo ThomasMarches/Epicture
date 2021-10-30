@@ -33,6 +33,7 @@ final image = ImgurPost(
   views: 10,
   downs: 0,
   ups: 0,
+  commentCount: 0,
 );
 
 void main() {

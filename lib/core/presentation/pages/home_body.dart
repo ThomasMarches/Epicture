@@ -18,7 +18,7 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  List<ImgurPost>? homePagePostList;
+  List<ImgurPost>? postList;
   List<bool>? likedPosts;
 
   @override
@@ -28,14 +28,14 @@ class _HomeBodyState extends State<HomeBody> {
   }
 
   void _setupHomePagePostList() async {
-    homePagePostList = (widget.homePagePostList == null)
+    postList = (widget.homePagePostList == null)
         ? await ImgurDataSource.getHomePagePosts(context)
         : widget.homePagePostList;
-    if (homePagePostList != null) {
+    if (postList != null) {
       setState(() {
         likedPosts = List.generate(
-          homePagePostList!.length,
-          (index) => homePagePostList![index].favorite,
+          postList!.length,
+          (index) => postList![index].favorite,
         );
       });
     }
@@ -44,76 +44,70 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
     // final l10n = context.l10n;
-    return homePagePostList == null
+    return postList == null
         ? const Center(child: CircularProgressIndicator())
         : Container(
             color: Colors.grey[300],
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: homePagePostList!.length,
+              itemCount: postList!.length,
               itemBuilder: (BuildContext ctx, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Card(
-                    elevation: 0,
-                    margin: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.5),
+                    ),
+                    elevation: 5,
+                    margin: const EdgeInsets.symmetric(horizontal: 7.5),
                     child: Container(
-                      color: Colors.white,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.5))),
                       width: MediaQuery.of(context).size.width,
                       child: Column(
                         children: [
-                          if (homePagePostList![index].title != null)
+                          if (postList![index].title != null)
                             Padding(
                               padding: const EdgeInsets.only(
                                   top: 10, bottom: 5, left: 5, right: 5),
                               child: Text(
-                                homePagePostList![index].title!,
+                                postList![index].title!,
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ),
                           InkWell(
                               onTap: () {
                                 Utils.moveToPreviewPage(
-                                    homePagePostList![index], context);
+                                    postList![index], context);
                               },
-                              child:
-                                  PostPreview(post: homePagePostList![index])),
+                              child: PostPreview(post: postList![index])),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: Row(children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.comment,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              const Spacer(flex: 3),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.arrow_upward_sharp,
-                                  color: Colors.grey,
-                                ),
-                              ),
+                              Text(postList![index].commentCount.toString()),
+                              const SizedBox(width: 5),
+                              const Icon(Icons.comment, color: Colors.grey),
                               const Spacer(),
-                              if (homePagePostList![index].vote != null)
-                                Text(homePagePostList![index].vote!),
+                              Text((postList![index].ups! -
+                                      postList![index].downs!)
+                                  .toString()),
+                              const SizedBox(width: 5),
+                              const Icon(Icons.arrow_upward_sharp,
+                                  color: Colors.grey),
                               const Spacer(),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.arrow_downward_sharp,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              const Spacer(flex: 3),
+                              Text(postList![index].views.toString()),
+                              const SizedBox(width: 5),
+                              const Icon(Icons.remove_red_eye_outlined,
+                                  color: Colors.grey),
+                              const Spacer(),
                               IconButton(
                                 onPressed: () async {
                                   await ImgurDataSource.favoriteAPost(
                                     context,
-                                    homePagePostList![index].id,
+                                    postList![index].id,
                                   ).then((value) {
                                     if (value == true) {
                                       _notifyFavoriteGalleryBloc(context);

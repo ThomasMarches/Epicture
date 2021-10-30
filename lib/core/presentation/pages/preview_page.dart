@@ -112,19 +112,26 @@ class _PreviewPageState extends State<PreviewPage> {
             color: Colors.white,
             width: MediaQuery.of(context).size.width,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.arguments.post.title != null)
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 10, bottom: 5, left: 5, right: 5),
-                    child: Center(
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        widget.arguments.post.title!,
-                        style: const TextStyle(fontSize: 15),
+                        widget.arguments.post.author!,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                PostPreview(post: widget.arguments.post),
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(Utils.getTimeDifference(
+                          widget.arguments.post.datetime)),
+                    ),
+                  ],
+                ),
+                Center(child: PostPreview(post: widget.arguments.post)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(children: [
@@ -205,23 +212,25 @@ class _PreviewPageState extends State<PreviewPage> {
                     )
                   ]),
                 ),
+                if (widget.arguments.post.title != null)
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    child: Text(
+                      widget.arguments.post.title!,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   child: Text((widget.arguments.post.description != null)
                       ? widget.arguments.post.description!
                       : 'No description.'),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                      'Uploaded: ${Utils.getTimeDifference(widget.arguments.post.datetime)}'),
-                ),
-                if (widget.arguments.post.author != null &&
-                    widget.arguments.post.author != '')
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Uploaded by: ${widget.arguments.post.author}'),
-                  ),
                 Column(
                   children: [
                     Padding(

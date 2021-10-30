@@ -38,109 +38,117 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
-      height: 150,
-      color: Colors.grey[200],
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              '${widget.imageCommentsList?[widget.index].comment}',
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-          const Spacer(),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Text(
-              isAuthor == true
-                  ? 'Written by: You'
-                  : 'Written by: ${widget.imageCommentsList?[widget.index].author}',
-              style: const TextStyle(color: Colors.black, fontSize: 10),
-            ),
-          ),
-          Row(
-            children: [
-              Text(
-                'Uploaded: ${Utils.getTimeDifference(widget.imageCommentsList![widget.index].datetime)}',
-                style: const TextStyle(color: Colors.black, fontSize: 10),
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+      decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Expanded(
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                isAuthor == true
+                    ? 'You'
+                    : '${widget.imageCommentsList?[widget.index].author}',
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
               ),
-              const Spacer(),
-              if (isAuthor == true)
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: () async {
-                      Utils.showAlertDialog(
-                        context,
-                        _deleteComment,
-                        "Confirm delete",
-                        "Would you like to continue and delete your comment ?",
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.grey,
+            ),
+            const SizedBox(height: 5),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                '${widget.imageCommentsList?[widget.index].comment}',
+                style: const TextStyle(color: Colors.black),
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  Utils.getTimeDifference(
+                      widget.imageCommentsList![widget.index].datetime),
+                  style: const TextStyle(color: Colors.black),
+                ),
+                const Spacer(),
+                if (isAuthor == true)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      onPressed: () async {
+                        Utils.showAlertDialog(
+                          context,
+                          _deleteComment,
+                          "Confirm delete",
+                          "Would you like to continue and delete your comment ?",
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
+                IconButton(
+                  onPressed: () async {
+                    ImgurDataSource.voteOnComment(
+                            context,
+                            widget.imageCommentsList![widget.index].id
+                                .toString(),
+                            'up')
+                        .then(
+                      (value) {
+                        if (value == true) {
+                          setState(() {
+                            hasUpVoted = true;
+                            hasDownVoted = false;
+                          });
+                        }
+                      },
+                    );
+                  },
+                  icon: Icon(
+                    Icons.arrow_upward_sharp,
+                    color: hasUpVoted == true ? Colors.red : Colors.grey,
+                  ),
                 ),
-              IconButton(
-                onPressed: () async {
-                  ImgurDataSource.voteOnComment(
-                          context,
-                          widget.imageCommentsList![widget.index].id.toString(),
-                          'up')
-                      .then(
-                    (value) {
-                      if (value == true) {
-                        setState(() {
-                          hasUpVoted = true;
-                          hasDownVoted = false;
-                        });
-                      }
-                    },
-                  );
-                },
-                icon: Icon(
-                  Icons.arrow_upward_sharp,
-                  color: hasUpVoted == true ? Colors.red : Colors.grey,
+                Text(
+                  '${widget.imageCommentsList?[widget.index].ups}',
+                  style: const TextStyle(color: Colors.black),
                 ),
-              ),
-              Text(
-                '${widget.imageCommentsList?[widget.index].ups}',
-                style: const TextStyle(color: Colors.black, fontSize: 10),
-              ),
-              IconButton(
-                onPressed: () async {
-                  await ImgurDataSource.voteOnComment(
-                          context,
-                          widget.imageCommentsList![widget.index].id.toString(),
-                          'down')
-                      .then(
-                    (value) {
-                      if (value == true) {
-                        setState(() {
-                          hasUpVoted = false;
-                          hasDownVoted = true;
-                        });
-                      }
-                    },
-                  );
-                },
-                icon: Icon(
-                  Icons.arrow_downward_sharp,
-                  color: hasDownVoted == true ? Colors.red : Colors.grey,
+                IconButton(
+                  onPressed: () async {
+                    await ImgurDataSource.voteOnComment(
+                            context,
+                            widget.imageCommentsList![widget.index].id
+                                .toString(),
+                            'down')
+                        .then(
+                      (value) {
+                        if (value == true) {
+                          setState(() {
+                            hasUpVoted = false;
+                            hasDownVoted = true;
+                          });
+                        }
+                      },
+                    );
+                  },
+                  icon: Icon(
+                    Icons.arrow_downward_sharp,
+                    color: hasDownVoted == true ? Colors.red : Colors.grey,
+                  ),
                 ),
-              ),
-              Text(
-                '${widget.imageCommentsList?[widget.index].downs}',
-                style: const TextStyle(color: Colors.black, fontSize: 10),
-              ),
-            ],
-          ),
-        ],
+                Text(
+                  '${widget.imageCommentsList?[widget.index].downs}',
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

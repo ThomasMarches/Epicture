@@ -27,6 +27,7 @@ final image = ImgurPost(
   views: 10,
   downs: 0,
   ups: 0,
+  commentCount: 0,
 );
 
 void main() {
@@ -93,15 +94,12 @@ void main() {
           expect(find.text(commentsList[i].comment), findsOneWidget);
           expect(find.text(commentsList[i].ups.toString()), findsWidgets);
           if (commentsList[i].author == username) {
-            expect(find.text('Written by: You'), findsWidgets);
+            expect(find.text('You'), findsWidgets);
             expect(find.byIcon(Icons.delete), findsWidgets);
           } else {
-            expect(find.text('Written by: ${commentsList[i].author}'),
-                findsWidgets);
+            expect(find.text(commentsList[i].author), findsWidgets);
           }
-          expect(
-              find.text(
-                  'Uploaded: ${Utils.getTimeDifference(commentsList[i].datetime)}'),
+          expect(find.text(Utils.getTimeDifference(commentsList[i].datetime)),
               findsWidgets);
         }
       });

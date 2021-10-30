@@ -14,6 +14,7 @@ class ImgurPost {
     required this.views,
     required this.isAlbum,
     required this.content,
+    required this.commentCount,
   });
 
   factory ImgurPost.fromMap(Map<String, dynamic> map) {
@@ -41,6 +42,7 @@ class ImgurPost {
       views: map['views'] as int,
       vote: map['vote'] as String?,
       favorite: map['favorite'] as bool,
+      commentCount: map['comment_count'] as int?,
       type: (map['is_album'] == true)
           ? null
           : map['type'].toString().substring(6),
@@ -65,7 +67,7 @@ class ImgurPost {
   final int? ups;
   final int? downs;
   final int views;
+  final int? commentCount;
   final bool isAlbum;
   final List<String> content;
-  // final String? privacy;
 }
