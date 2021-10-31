@@ -33,12 +33,24 @@ final image = ImgurPost(
 void main() {
   group('ImagePage', () {
     testWidgets('renders an image without comment', (tester) async {
+      final userBloc = UserBloc();
+      userBloc.emit(const UserLoadedState(
+          user: UserEntity(
+        accessToken: '',
+        refreshToken: '',
+        accountUsername: 'username',
+        accountId: '',
+      )));
+
       mockNetworkImagesFor(() async {
-        await tester.pumpWidget(MaterialApp(
-            home: PreviewPage(
-          arguments: PreviewPageArguments(post: image),
-          commentsList: const [],
-        )));
+        await tester.pumpWidget(BlocProvider(
+          create: (context) => userBloc,
+          child: MaterialApp(
+              home: PreviewPage(
+            arguments: PreviewPageArguments(post: image),
+            commentsList: null,
+          )),
+        ));
       }).then((value) {
         expect(find.byType(PreviewPage), findsOneWidget);
         expect(find.byIcon(Icons.keyboard_arrow_left), findsOneWidget);
