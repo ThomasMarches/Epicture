@@ -94,7 +94,7 @@
             "downs": 19,
             "points": 1248,
             "score": 0,
-            "is_album": true,
+            "is_album": false,
             "vote": "",
             "favorite": true,
             "nsfw": false,

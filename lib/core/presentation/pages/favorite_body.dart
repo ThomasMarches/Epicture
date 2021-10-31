@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:epicture/core/data/models/imgur_image.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
 import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
@@ -17,7 +17,7 @@ class FavoriteBody extends StatefulWidget {
 }
 
 class _FavoriteBodyState extends State<FavoriteBody> {
-  List<ImgurImages>? userFavoriteImagesList;
+  List<ImgurPost>? userFavoritePostsList;
   List<bool>? userLikedPictures;
 
   @override
@@ -40,9 +40,9 @@ class _FavoriteBodyState extends State<FavoriteBody> {
       listener: (context, state) {
         if (state is FetchFavoriteGalleryPictureSuccess) {
           setState(() {
-            userFavoriteImagesList = state.userFavoriteImageList;
+            userFavoritePostsList = state.userFavoritePostList;
             userLikedPictures =
-                List.generate(userFavoriteImagesList!.length, (index) => true);
+                List.generate(userFavoritePostsList!.length, (index) => true);
           });
         }
       },
@@ -55,9 +55,9 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                     childAspectRatio: 3 / 4,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10),
-                itemCount: userFavoriteImagesList == null
+                itemCount: userFavoritePostsList == null
                     ? 0
-                    : userFavoriteImagesList!.length,
+                    : userFavoritePostsList!.length,
                 itemBuilder: (BuildContext ctx, index) {
                   return Card(
                     child: Column(
@@ -66,8 +66,8 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                           flex: 5,
                           child: InkWell(
                             onTap: () {
-                              Utils.moveToImagePage(
-                                userFavoriteImagesList![index],
+                              Utils.moveToPreviewPage(
+                                userFavoritePostsList![index],
                                 context,
                               );
                             },
@@ -76,7 +76,13 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                 image: CachedNetworkImageProvider(
-                                  userFavoriteImagesList![index].link,
+                                  (userFavoritePostsList![index].isAlbum ==
+                                              true &&
+                                          userFavoritePostsList![index]
+                                              .content
+                                              .isNotEmpty)
+                                      ? userFavoritePostsList![index].content[0]
+                                      : userFavoritePostsList![index].link,
                                 ),
                                 fit: BoxFit.fill,
                               )),
@@ -86,9 +92,9 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                         Flexible(
                           child: IconButton(
                             onPressed: () async {
-                              await ImgurDataSource.favoriteAnImage(
+                              await ImgurDataSource.favoriteAPost(
                                 context,
-                                userFavoriteImagesList![index].id,
+                                userFavoritePostsList![index].id,
                               ).then((value) {
                                 if (value == true) {
                                   _notifyFavoriteGalleryBloc(context);
