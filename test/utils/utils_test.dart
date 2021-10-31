@@ -1,18 +1,9 @@
 import 'package:epicture/core/data/models/imgur_post.dart';
-import 'package:epicture/core/domain/entities/user_entity.dart';
-import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
-import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
-import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:epicture/core/presentation/pages/home_page.dart';
-import 'package:epicture/core/presentation/pages/preview_page.dart';
-import 'package:epicture/core/presentation/router/app_router.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:network_image_mock/network_image_mock.dart';
 
 class MockBuildContext extends Mock implements BuildContext {}
 

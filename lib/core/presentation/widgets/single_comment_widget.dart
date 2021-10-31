@@ -94,8 +94,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                 onPressed: () async {
                   ImgurDataSource.voteOnComment(
                           context,
-                          widget.imageCommentsList![widget.index].id
-                              .toString(),
+                          widget.imageCommentsList![widget.index].id.toString(),
                           'up')
                       .then(
                     (value) {
@@ -121,8 +120,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                 onPressed: () async {
                   await ImgurDataSource.voteOnComment(
                           context,
-                          widget.imageCommentsList![widget.index].id
-                              .toString(),
+                          widget.imageCommentsList![widget.index].id.toString(),
                           'down')
                       .then(
                     (value) {
