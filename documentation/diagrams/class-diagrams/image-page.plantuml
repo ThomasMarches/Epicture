@@ -1,0 +1,77 @@
+@startuml ImagePage
+"epicture::core::presentation::pages::image_page.dart::ImagePage" o-- "epicture::core::presentation::pages::image_page.dart::ImagePageArguments"
+
+class "epicture::core::presentation::pages::image_page.dart::SingleCommentWidget" {
+  +List<ImgurComments>? imageCommentsList
+  +void Function(int) updateImageList
+  +int index
+  +State<SingleCommentWidget> createState()
+}
+
+class "epicture::core::presentation::pages::image_page.dart::ImagePage" {
+  +ImagePageArguments image
+  {static} +String routeName
+  +_ImagePageState createState()
+}
+
+class "epicture::core::presentation::pages::image_page.dart::ImagePageArguments" {
+  +String id
+  +String type
+  +int width
+  +int height
+  +String? vote
+  +bool favorite
+  +String? title
+  +String? description
+  +DateTime datetime
+  +String? section
+  +String link
+}
+
+class "epicture::core::presentation::pages::image_page.dart::ImageCommentList" {
+  +List<ImgurComments>? imageCommentsList
+  +State<ImageCommentList> createState()
+}
+
+class "epicture::core::presentation::pages::image_page.dart::_ImagePageState" {
+  +List<ImgurComments>? imageCommentsList
+  -TextEditingController _controller
+  +void initState()
+  +Widget build()
+  -String _getPictureHash()
+}
+
+class "epicture::core::presentation::pages::image_page.dart::_SingleCommentWidgetState" {
+  +bool hasUpVoted
+  +bool hasDownVoted
+  +UserLoadedState? state
+  +bool isAuthor
+  +Widget build()
+  -void _deleteComment()
+  -void _setupIsAuthor()
+}
+
+"epicture::core::presentation::pages::image_page.dart::_SingleCommentWidgetState" o-- "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserLoadedState"
+
+class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserLoadedState" {
+  +UserEntity user
+  +List<Object> props
+}
+
+class "epicture::core::presentation::bloc::user_bloc::user_bloc.dart::FetchUserInformationsEvent" {
+  +UserEntity user
+  +List<Object> props
+}
+
+"epicture::core::presentation::bloc::user_bloc::user_bloc.dart::FetchUserInformationsEvent" o-- "epicture::core::domain::entities::user_entity.dart::UserEntity"
+"epicture::core::presentation::bloc::user_bloc::user_bloc.dart::UserLoadedState" o-- "epicture::core::domain::entities::user_entity.dart::UserEntity"
+
+class "epicture::core::domain::entities::user_entity.dart::UserEntity" {
+  +String accessToken
+  +String refreshToken
+  +String accountUsername
+  +String accountId
+  +List<Object> props
+}
+
+@enduml
