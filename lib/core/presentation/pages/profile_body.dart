@@ -1,4 +1,4 @@
-import 'package:epicture/core/data/models/imgur_image.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/data/models/user_informations.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
@@ -18,7 +18,7 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
   UserInformations? userInformations;
-  List<ImgurImages>? userImagesList;
+  List<ImgurPost>? userPostList;
   var isEditing = false;
   String? newUsername;
   String? newDescription;
@@ -178,7 +178,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             listener: (context, state) {
               if (state is FetchProfileGalleryPictureSuccess) {
                 setState(() {
-                  userImagesList = state.userImagesList;
+                  userPostList = state.userPostList;
                 });
               }
             },
@@ -192,13 +192,12 @@ class _ProfileBodyState extends State<ProfileBody> {
                             childAspectRatio: 3 / 2,
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20),
-                    itemCount:
-                        userImagesList == null ? 0 : userImagesList!.length,
+                    itemCount: userPostList == null ? 0 : userPostList!.length,
                     itemBuilder: (BuildContext ctx, index) {
                       return InkWell(
                         onTap: () {
-                          Utils.moveToImagePage(
-                            userImagesList![index],
+                          Utils.moveToPreviewPage(
+                            userPostList![index],
                             context,
                           );
                         },
@@ -206,8 +205,8 @@ class _ProfileBodyState extends State<ProfileBody> {
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                            image: Image.network(userImagesList![index].link)
-                                .image,
+                            image:
+                                Image.network(userPostList![index].link).image,
                             fit: BoxFit.fill,
                           )),
                         ),

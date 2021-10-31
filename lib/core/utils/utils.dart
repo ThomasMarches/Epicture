@@ -1,16 +1,16 @@
-import 'package:epicture/core/data/models/imgur_image.dart';
-import 'package:epicture/core/presentation/pages/image_page.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
+import 'package:epicture/core/presentation/pages/preview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
-  static void moveToImagePage(
-    ImgurImages image,
+  static void moveToPreviewPage(
+    ImgurPost image,
     BuildContext context,
   ) {
-    Navigator.of(context).pushNamed(ImagePage.routeName,
-        arguments: ImagePageArguments(
-          image: image,
+    Navigator.of(context).pushNamed(PreviewPage.routeName,
+        arguments: PreviewPageArguments(
+          post: image,
         ));
   }
 

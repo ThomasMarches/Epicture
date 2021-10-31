@@ -9,7 +9,7 @@ void main() {
     });
     test('deleteImageURL test', () {
       expect(
-          Constants.deleteImageURL('1234'), '${Constants.baseUrl}/image/1234');
+          Constants.deletePostURL('1234'), '${Constants.baseUrl}/image/1234');
     });
 
     test('changeAccountSettingsURL test', () {
@@ -23,28 +23,28 @@ void main() {
     });
 
     test('getUserFavoriteImagesURL test', () {
-      expect(Constants.getUserFavoriteImagesURL('Username'),
+      expect(Constants.userFavoritePostsURL('Username'),
           '${Constants.baseUrl}/account/Username/favorites/');
     });
 
     test('getImageCommentsURL test', () {
-      expect(Constants.getImageCommentsURL('1234'),
+      expect(Constants.getPostCommentsURL('1234'),
           '${Constants.baseUrl}/gallery/1234/comments/');
     });
 
-    test('searchImagesURL normal test', () {
-      expect(Constants.searchImagesURL('dog'),
+    test('searchPostURL normal test', () {
+      expect(Constants.searchPostURL('dog', 'time', 'all'),
           '${Constants.baseUrl}/gallery/search/time/all/1?q_all=dog&q_type=jgp&q_type=png');
     });
 
-    test('searchImagesURL test with null tag', () {
-      expect(Constants.searchImagesURL(null),
+    test('searchPostURL test with null tag', () {
+      expect(Constants.searchPostURL(null, '', ''),
           '${Constants.baseUrl}/gallery/search/');
     });
 
     test('getFavoriteAnImageURL test', () {
-      expect(Constants.getFavoriteAnImageURL('1234'),
-          '${Constants.baseUrl}/image/1234/favorite');
+      expect(Constants.getFavoriteAPostURL('1234'),
+          '${Constants.baseUrl}/album/1234/favorite');
     });
   });
 }

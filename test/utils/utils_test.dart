@@ -1,35 +1,30 @@
-import 'package:epicture/core/data/models/imgur_image.dart';
-import 'package:epicture/core/domain/entities/user_entity.dart';
-import 'package:epicture/core/presentation/bloc/favorite_gallery_bloc/favorite_gallery_bloc.dart';
-import 'package:epicture/core/presentation/bloc/profile_gallery_bloc/profile_gallery_bloc.dart';
-import 'package:epicture/core/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:epicture/core/presentation/pages/home_page.dart';
-import 'package:epicture/core/presentation/pages/image_page.dart';
-import 'package:epicture/core/presentation/router/app_router.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:network_image_mock/network_image_mock.dart';
 
 class MockBuildContext extends Mock implements BuildContext {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-final image = ImgurImages(
+final image = ImgurPost(
   id: 'CiTPwEY',
-  author: null,
+  author: 'Author',
   type: 'jpeg',
-  width: 480,
-  height: 360,
+  content: [],
+  isAlbum: false,
   vote: 'up',
   favorite: true,
   title: 'TestTitle',
   description: 'A simple description',
   datetime: DateTime.now(),
   link: 'https://i.imgur.com/jUOQtxg.jpeg',
+  views: 10,
+  downs: 0,
+  ups: 0,
+  commentCount: 0,
 );
 
 void main() {
@@ -182,49 +177,5 @@ void main() {
     await widgetTester.tap(find.byKey(_testKeyTarget));
     await widgetTester.pump();
     await widgetTester.tap(find.byType(TextButton).last);
-  });
-
-  testWidgets('moveToImagePage should navigate us to the ImagePage',
-      (widgetTester) async {
-    final userBloc = UserBloc();
-    userBloc.emit(const UserLoadedState(
-        user: UserEntity(
-      accessToken: '',
-      refreshToken: '',
-      accountUsername: '',
-      accountId: '',
-    )));
-
-    BuildContext? _context;
-
-    mockNetworkImagesFor(() async {
-      await widgetTester.pumpWidget(
-        MaterialApp(
-          onGenerateRoute: AppRouter().onGenerateRoute,
-          home: Scaffold(
-              body: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => userBloc,
-              ),
-              BlocProvider(
-                create: (context) => ProfileGalleryBloc(),
-              ),
-              BlocProvider(
-                create: (context) => FavoriteGalleryBloc(),
-              ),
-            ],
-            child: Builder(builder: (context) {
-              _context = context;
-              return const HomePage();
-            }),
-          )),
-        ),
-      );
-
-      Utils.moveToImagePage(image, _context!);
-      await widgetTester.pumpAndSettle();
-      expect(find.byType(ImagePage), findsOneWidget);
-    });
   });
 }

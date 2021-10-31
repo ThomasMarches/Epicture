@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:epicture/core/data/models/imgur_image.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 
 part 'profile_gallery_event.dart';
@@ -23,13 +23,13 @@ class ProfileGalleryBloc
   ) async* {
     yield FetchProfileGalleryPictureLoading();
 
-    final userImagesList = await ImgurDataSource.getUserImages(accessToken);
+    final userPostList = await ImgurDataSource.getUserPosts(accessToken);
 
-    if (userImagesList == null) {
+    if (userPostList == null) {
       yield FetchProfileGalleryPictureFailure();
       return;
     }
 
-    yield FetchProfileGalleryPictureSuccess(userImagesList: userImagesList);
+    yield FetchProfileGalleryPictureSuccess(userPostList: userPostList);
   }
 }

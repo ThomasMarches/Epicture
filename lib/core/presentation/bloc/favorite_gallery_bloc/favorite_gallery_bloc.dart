@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:epicture/core/data/models/imgur_image.dart';
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 
 part 'favorite_gallery_event.dart';
@@ -25,15 +25,15 @@ class FavoriteGalleryBloc
   ) async* {
     yield FetchFavoriteGalleryPictureLoading();
 
-    final userFavoriteImageList = await ImgurDataSource.getUserFavoriteImages(
+    final userFavoritePostList = await ImgurDataSource.getUserFavoritePosts(
         accountUsername, accessToken);
 
-    if (userFavoriteImageList == null) {
+    if (userFavoritePostList == null) {
       yield FetchFavoriteGalleryPictureFailure();
       return;
     }
 
     yield FetchFavoriteGalleryPictureSuccess(
-        userFavoriteImageList: userFavoriteImageList);
+        userFavoritePostList: userFavoritePostList);
   }
 }
