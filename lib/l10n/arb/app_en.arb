@@ -1,11 +1,7 @@
 {
     "@@locale": "en",
-    "homePageTitle": "Home",
+    "homePageTitle": "Epicture",
     "@homePageTitle": {
         "description": "HomePage Title"
-    },
-    "homePageText": "AppMoov Starter",
-    "@homePageText": {
-        "description": "Text shown at the HomePage center"
     }
 }
