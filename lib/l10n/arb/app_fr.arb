@@ -2,10 +2,6 @@
     "@@locale": "fr",
     "homePageTitle": "Epicture",
     "@homePageTitle": {
-        "description": "Titre de la page HomePage"
-    },
-    "homeBodyTitle": "Page d'accueil",
-    "@homeBodyTitle": {
         "description": "Titre de la page d'accueil"
     }
 }
