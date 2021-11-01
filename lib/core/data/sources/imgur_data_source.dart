@@ -30,7 +30,7 @@ class ImgurDataSource {
 
       final jsonResponse = jsonDecode(response.body);
       final jsonData = jsonResponse?['data'];
-      return jsonData != null ? UserInformations.fromMap(jsonData) : null;
+      return (jsonData != null) ? UserInformations.fromMap(jsonData) : null;
     } catch (e) {
       log(e.toString());
     }
@@ -110,7 +110,7 @@ class ImgurDataSource {
 
           favoritePostList.add(ImgurPost.fromMap(jsonData));
         }
-        return _cleanImgurPostList(favoritePostList);
+        return cleanImgurPostList(favoritePostList);
       }
       return null;
     } catch (e) {
@@ -147,7 +147,7 @@ class ImgurDataSource {
         return null;
       }
 
-      return _cleanImgurPostList(userAssociatedPostsList);
+      return cleanImgurPostList(userAssociatedPostsList);
     } catch (e) {
       log(e.toString());
     }
@@ -180,7 +180,7 @@ class ImgurDataSource {
         return null;
       }
 
-      return _cleanImgurPostList(homePagePostList);
+      return cleanImgurPostList(homePagePostList);
     } catch (e) {
       log(e.toString());
     }
@@ -296,14 +296,9 @@ class ImgurDataSource {
       final jsonResponse = jsonDecode(response.body);
       final jsonData = jsonResponse?['data'];
 
-      if (jsonData == null) return null;
-
-      if (jsonData is Map<String, dynamic>) {
-        return await convertIdToComment(
-            context, jsonData.values.first.toString());
-      } else {
-        return null;
-      }
+      return (jsonData is Map<String, dynamic>)
+          ? await convertIdToComment(context, jsonData.values.first.toString())
+          : null;
     } catch (e) {
       log(e.toString());
     }
@@ -329,9 +324,7 @@ class ImgurDataSource {
       final jsonResponse = jsonDecode(response.body);
       final jsonData = jsonResponse?['data'];
 
-      if (jsonData == null) return null;
-
-      return ImgurComments.fromMap(jsonData);
+      return (jsonData == null) ? null : ImgurComments.fromMap(jsonData);
     } catch (e) {
       log(e.toString());
     }
@@ -381,9 +374,7 @@ class ImgurDataSource {
       final jsonResponse = jsonDecode(response.body);
       final jsonData = jsonResponse?['data'];
 
-      if (jsonData == null) return false;
-
-      return true;
+      return (jsonData == null) ? false : true;
     } catch (e) {
       log(e.toString());
     }
@@ -409,9 +400,7 @@ class ImgurDataSource {
       final jsonResponse = jsonDecode(response.body);
       final jsonData = jsonResponse?['data'];
 
-      if (jsonData == null) return false;
-
-      return true;
+      return (jsonData == null) ? false : true;
     } catch (e) {
       log(e.toString());
     }
@@ -446,9 +435,7 @@ class ImgurDataSource {
       final jsonResponse = jsonDecode(response.body);
       final jsonData = jsonResponse?['data'];
 
-      if (jsonData == null) return false;
-
-      return true;
+      return (jsonData == null) ? false : true;
     } catch (e) {
       log(e.toString());
     }
@@ -481,8 +468,7 @@ class ImgurDataSource {
       final jsonResponse = jsonDecode(response.body);
       final jsonData = jsonResponse?['data'];
 
-      if (jsonData == null) return false;
-      return true;
+      return (jsonData == null) ? false : true;
     } catch (e) {
       log(e.toString());
     }
@@ -501,7 +487,7 @@ class ImgurDataSource {
     return (userBlocState.user.accountUsername);
   }
 
-  static List<ImgurPost> _cleanImgurPostList(List<ImgurPost> postList) {
+  static List<ImgurPost> cleanImgurPostList(List<ImgurPost> postList) {
     postList.removeWhere(
       (element) {
         if (!element.isAlbum) {

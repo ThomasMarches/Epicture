@@ -7,7 +7,6 @@ class ImgurComments {
     required this.downs,
     required this.author,
     required this.datetime,
-    // required this.children,
   });
 
   factory ImgurComments.fromMap(Map<String, dynamic> map) {
@@ -20,7 +19,6 @@ class ImgurComments {
       author: map['author'] as String,
       datetime:
           DateTime.fromMillisecondsSinceEpoch(map['datetime'] * 1000 as int),
-      // children: map['children'] as List<ImgurComments>?,
     );
   }
 
@@ -31,5 +29,4 @@ class ImgurComments {
   final String author;
   final String comment;
   final DateTime datetime;
-  // final List<ImgurComments>? children;
 }
