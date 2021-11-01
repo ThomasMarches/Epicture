@@ -26,6 +26,25 @@ class _SearchBodyState extends State<SearchBody> {
     return Column(
       children: [
         Padding(
+          padding: const EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: 5,
+          ),
+          child: TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Search',
+            ),
+            onSubmitted: (value) async {
+              tagValue = value;
+              _updatePostList();
+            },
+            maxLength: 20,
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: Row(
             children: [
@@ -49,25 +68,6 @@ class _SearchBodyState extends State<SearchBody> {
                 optionList: const ['all', 'year', 'month', 'week', 'day'],
               ),
             ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 10,
-            left: 10,
-            right: 10,
-            bottom: 5,
-          ),
-          child: TextField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Search',
-            ),
-            onSubmitted: (value) async {
-              tagValue = value;
-              _updatePostList();
-            },
-            maxLength: 20,
           ),
         ),
         if (userAssociatedPostList == null && hasRequested == true)

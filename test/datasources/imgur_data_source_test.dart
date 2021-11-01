@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:epicture/core/data/models/imgur_post.dart';
 import 'package:epicture/core/data/models/user_informations.dart';
 import 'package:epicture/core/data/sources/imgur_data_source.dart';
 import 'package:epicture/core/domain/entities/user_entity.dart';
@@ -274,6 +278,25 @@ void main() {
         ),
         false,
       );
+    });
+
+    test(
+        'cleanImgurPostList should return the list with only .png .jpeg and .jpg',
+        () async {
+      final file = File('test/ressources/imgur_post_list_with_mp4.json')
+          .readAsStringSync();
+
+      final jsonResponse = jsonDecode(file);
+      final jsonData = jsonResponse['data'];
+
+      final imageList = List<ImgurPost>.from(
+        jsonData.map<ImgurPost>(
+          (model) => ImgurPost.fromMap(model),
+        ),
+      );
+
+      expect(imageList.length, 5);
+      expect(ImgurDataSource.cleanImgurPostList(imageList).length, 3);
     });
   }));
 }
