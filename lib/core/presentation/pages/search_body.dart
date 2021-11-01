@@ -30,7 +30,6 @@ class _SearchBodyState extends State<SearchBody> {
             top: 10,
             left: 10,
             right: 10,
-            bottom: 5,
           ),
           child: TextField(
             decoration: const InputDecoration(
@@ -45,7 +44,7 @@ class _SearchBodyState extends State<SearchBody> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Row(
             children: [
               DropDownMenu(
